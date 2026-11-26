@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark" data-dyslexia="false">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estudio Radio Ad-Gemellas — CEIP San José (Palenciana)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-app: #090e1a;
+      --bg-panel: #131c31;
+      --bg-card: #0d1424;
+      --border-color: #263554;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f59e0b;
+      --accent-fg: #090e1a;
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --base-scale: 1;
+      --letter-spacing: normal;
+      --word-spacing: normal;
+      --line-height: 1.5;
+    }
+
+    /* TEMA ALTO CONTRASTE DUA */
+    [data-theme="high-contrast"] {
+      --bg-app: #000000;
+      --bg-panel: #0a0a0a;
+      --bg-card: #000000;
+      --border-color: #ffff00;
+      --text-main: #ffffff;
+      --text-muted: #ffff00;
+      --accent: #ffff00;
+      --accent-fg: #000000;
+    }
+
+    /* TEMA SEPIA / PAPEL CÁLIDO DUA */
+    [data-theme="sepia"] {
+      --bg-app: #f4ecd8;
+      --bg-panel: #eae0c8;
+      --bg-card: #fbf6ea;
+      --border-color: #c2b28f;
+      --text-main: #2c2216;
+      --text-muted: #5c4b37;
+      --accent: #b45309;
+      --accent-fg: #ffffff;
+    }
+
+    /* TEMA CLARO ESTÁNDAR */
+    [data-theme="light"] {
+      --bg-app: #f1f5f9;
+      --bg-panel: #ffffff;
+      --bg-card: #f8fafc;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #d97706;
+      --accent-fg: #ffffff;
+    }
+
+    /* MODO LECTURA FÁCIL / DISLEXIA DUA */
+    [data-dyslexia="true"] {
+      --font-family: 'Atkinson Hyperlegible', Verdana, sans-serif;
+      --letter-spacing: 0.06em;
+      --word-spacing: 0.16em;
+      --line-height: 1.85;
+    }
+
+    html {
+      font-size: calc(16px * var(--base-scale));
+    }
+
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      letter-spacing: var(--letter-spacing);
+      word-spacing: var(--word-spacing);
+      line-height: var(--line-height);
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .theme-panel {
+      background-color: var(--bg-panel);
+      border-color: var(--border-color);
+    }
+
+    .theme-card {
+      background-color: var(--bg-card);
+      border-color: var(--border-color);
+    }
+
+    .theme-muted {
+      color: var(--text-muted);
+    }
+
+    .theme-accent-bg {
+      background-color: var(--accent);
+      color: var(--accent-fg);
+    }
+
+    @keyframes pulse-rec {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.97); }
+    }
+    .on-air-active {
+      animation: pulse-rec 1.4s infinite;
+    }
+
+    .pad-active {
+      transform: scale(0.95);
+      outline: 3px solid var(--accent);
+    }
+
+    .teleprompter-mirror {
+      transform: scaleX(-1);
+    }
+
+    /* Barras de ecualizador animadas */
+    @keyframes eq-bounce {
+      0%, 100% { height: 22%; }
+      50% { height: 95%; }
+    }
+    .eq-bar {
+      animation: eq-bounce 0.45s infinite ease-in-out;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.12s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.25s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.08s; }
+
+    /* Estilos de impresión / PDF */
+    @media print {
+      body * { visibility: hidden; }
+      #print-area, #print-area * { visibility: visible; }
+      #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 24px;
+      }
+      .no-print { display: none !important; }
+    }
+
+    /* Scrollbar discreta */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+  </style>
+</head>
+<body class="min-h-screen md:h-screen md:overflow-hidden flex flex-col">
+
+  <!-- ==================== 1. BARRA GLOBAL DE ACCESIBILIDAD DUA ==================== -->
+  <div class="theme-panel border-b px-3 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 no-print" role="region" aria-label="Herramientas de Accesibilidad DUA">
+    <div class="flex items-center gap-2 font-bold">
+      <span class="px-2 py-0.5 rounded theme-accent-bg uppercase tracking-wider">DUA · Inclusión</span>
+      <span class="hidden xl:inline theme-muted">Adapta el entorno visual y lector para todo el alumnado:</span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <!-- 4 Temas Visuales -->
+      <div class="flex items-center gap-1" role="group" aria-label="Selector de contraste visual">
+        <span class="theme-muted font-semibold mr-0.5">Tema:</span>
+        <button onclick="setTheme('dark')" class="px-2 py-0.5 rounded border border-slate-600 bg-slate-900 text-white font-semibold cursor-pointer">Oscuro</button>
+        <button onclick="setTheme('high-contrast')" class="px-2 py-0.5 rounded border border-yellow-400 bg-black text-yellow-300 font-bold cursor-pointer">Alto</button>
+        <button onclick="setTheme('sepia')" class="px-2 py-0.5 rounded border border-amber-700 bg-[#f4ecd8] text-[#2c2216] font-semibold cursor-pointer">Sepia</button>
+        <button onclick="setTheme('light')" class="px-2 py-0.5 rounded border border-slate-400 bg-white text-slate-900 font-semibold cursor-pointer">Claro</button>
+      </div>
+
+      <!-- Lectura Fácil / Dislexia -->
+      <button onclick="toggleDyslexia()" id="btn-dyslexia" aria-pressed="false" class="px-2 py-0.5 rounded border theme-card font-semibold hover:opacity-90 flex items-center gap-1 cursor-pointer">
+        <span>👁️ Lectura Fácil / Dislexia:</span>
+        <span id="dyslexia-state" class="font-extrabold">OFF</span>
+      </button>
+
+      <!-- Escalado Global de Texto -->
+      <div class="flex items-center gap-1" role="group" aria-label="Tamaño de letra global">
+        <span class="theme-muted font-semibold">Letra:</span>
+        <button onclick="changeGlobalScale(-0.1)" class="px-2 py-0.5 rounded border theme-card font-bold cursor-pointer" aria-label="Reducir texto">A-</button>
+        <button onclick="resetGlobalScale()" class="px-2 py-0.5 rounded border theme-card font-semibold cursor-pointer" aria-label="Restablecer texto">100%</button>
+        <button onclick="changeGlobalScale(0.1)" class="px-2 py-0.5 rounded border theme-card font-bold cursor-pointer" aria-label="Aumentar texto">A+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. CABECERA COMPACTA DE ESTUDIO ==================== -->
+  <header class="theme-panel border-b px-4 py-2 shadow-sm shrink-0 z-30 no-print">
+    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Identidad y Navegación integrada -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl theme-accent-bg flex items-center justify-center font-extrabold text-xl shadow shrink-0">
+            🎙️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-base sm:text-lg font-extrabold tracking-tight leading-none">RADIO AD-GEMELLAS</h1>
+              <span class="text-[11px] px-2 py-0.5 rounded-full border font-bold hidden sm:inline">CEIP San José · Palenciana</span>
+            </div>
+            <p class="text-[11px] theme-muted leading-tight mt-0.5">Cabina Todo en Uno · Grabación multipista en Audacity (USB)</p>
+          </div>
+        </div>
+
+        <!-- Pestañas -->
+        <nav class="flex gap-1.5 ml-0 sm:ml-4" aria-label="Navegación principal">
+          <button onclick="switchTab('cabina')" id="tab-cabina" class="tab-btn px-3 py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow">
+            🎙️ Cabina en Directo
+          </button>
+          <button onclick="switchTab('repos')" id="tab-repos" class="tab-btn px-3 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            🌐 Repositorios Libres de Derechos
+          </button>
+          <button onclick="switchTab('guide')" id="tab-guide" class="tab-btn px-3 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            🎚️ Guía Audacity, Checklist y Archivo
+          </button>
+        </nav>
+      </div>
+
+      <!-- Cronómetro y Piloto EN EL AIRE -->
+      <div class="flex items-center gap-2.5">
+        <div class="theme-card border px-2.5 py-1 rounded-xl flex items-center gap-2">
+          <span class="text-[11px] theme-muted uppercase font-bold">Tiempo:</span>
+          <span id="timer-display" class="font-mono text-base font-extrabold">00:00</span>
+          <button onclick="toggleTimer()" id="timer-play-btn" title="Iniciar / Pausar cronómetro" class="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">▶️</button>
+          <button onclick="resetTimer()" title="Reiniciar cronómetro" class="px-2 py-0.5 rounded border theme-panel text-xs font-bold hover:opacity-80 cursor-pointer">↺</button>
+        </div>
+
+        <button id="on-air-btn" onclick="toggleOnAir()" class="px-3.5 py-1.5 rounded-xl font-extrabold text-xs tracking-wider uppercase border-2 border-slate-500 theme-card transition-all flex items-center gap-2 shadow cursor-pointer">
+          <span id="on-air-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          <span id="on-air-text">FUERA DEL AIRE</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast de Notificación Flotante -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+  <main class="flex-1 max-w-[1800px] w-full mx-auto p-3 flex flex-col min-h-0">
+
+    <!-- ====================================================================== -->
+    <!-- VISTA 1: CABINA TODO EN UNO (IZQUIERDA TELEPROMPTER | DERECHA PISTAS)   -->
+    <!-- ====================================================================== -->
+    <section id="view-cabina" class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-3.5 min-h-0">
+      
+      <!-- COLUMNA IZQUIERDA (7 de 12 cols): GENERADOR + TELEPROMPTER DUA -->
+      <div class="md:col-span-7 theme-panel border-2 rounded-2xl p-3.5 flex flex-col min-h-[520px] md:h-full overflow-hidden shadow-lg">
+        
+        <!-- 1. Selector de Plantillas por Etapa + Botones Editor/PDF -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-700/50 shrink-0">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-extrabold uppercase text-amber-400 mr-1">Plantillas:</span>
+            <button onclick="loadTemplate('infantil')" id="tpl-btn-infantil" class="px-2.5 py-1 rounded-lg border theme-card hover:border-amber-500 text-xs font-bold transition cursor-pointer">
+              🧸 Infantil (3-5 años)
+            </button>
+            <button onclick="loadTemplate('primaria')" id="tpl-btn-primaria" class="px-2.5 py-1 rounded-lg border border-amber-500 theme-card hover:border-amber-500 text-xs font-bold transition cursor-pointer">
+              📚 Primaria (1º-6º)
+            </button>
+            <button onclick="loadTemplate('eso')" id="tpl-btn-eso" class="px-2.5 py-1 rounded-lg border theme-card hover:border-amber-500 text-xs font-bold transition cursor-pointer">
+              🎧 1º Ciclo ESO
+            </button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span id="word-stats" class="text-[11px] font-mono font-bold px-2 py-1 rounded-lg theme-card border">0 pal. · ~00:00</span>
+            <button onclick="toggleQuickEditor()" id="btn-toggle-editor" class="px-2.5 py-1 rounded-lg border theme-card hover:opacity-90 text-xs font-extrabold cursor-pointer">
+              ✏️ Editar Guion
+            </button>
+            <button onclick="exportScriptPDF()" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow cursor-pointer">
+              📄 PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Editor Plegable de Guion -->
+        <div id="quick-editor-drawer" class="hidden theme-card border border-amber-500/50 rounded-xl p-3 my-2.5 space-y-2 shrink-0">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <input id="script-title" type="text" value="Informativo Escolar: Noticias del CEIP San José (Primaria)" placeholder="Título del programa..." class="flex-1 min-w-[200px] theme-panel border rounded-lg px-2.5 py-1 text-xs font-bold" />
+            <div class="flex flex-wrap gap-1 text-[11px]">
+              <button onclick="insertScriptTag('[SINTONÍA OFICIAL RADIO AD-GEMELLAS]')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold cursor-pointer">+ Sintonía</button>
+              <button onclick="insertScriptTag('[EFECTO: CAMBIO NOTICIAS]')" class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono font-bold cursor-pointer">+ Noticias</button>
+              <button onclick="insertScriptTag('[EFECTO: APLAUSOS]')" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold cursor-pointer">+ Aplausos</button>
+              <button onclick="insertScriptTag('[EFECTO: MELODÍA CIERRE]')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold cursor-pointer">+ Cierre</button>
+            </div>
+          </div>
+          <textarea id="script-editor" rows="5" oninput="onScriptInput()" class="w-full theme-panel border rounded-xl p-2.5 text-xs sm:text-sm leading-relaxed focus:outline-none" placeholder="Escribe o edita el guion aquí..."></textarea>
+          <div class="flex justify-between items-center text-[11px] theme-muted">
+            <span>Usa <strong>LOCUTOR 1:</strong> para colorear voces y <strong>[EFECTO: ...]</strong> para destacar sonidos.</span>
+            <button onclick="toggleQuickEditor()" class="px-3 py-1 rounded-lg theme-accent-bg font-extrabold cursor-pointer">
+              ✅ Listo (Ocultar Editor)
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Barra de Controles del Teleprompter DUA -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 py-2.5 shrink-0 text-xs">
+          <button onclick="togglePrompterScroll()" id="prompter-play-btn" class="col-span-2 sm:col-span-1 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold shadow cursor-pointer flex items-center justify-center gap-1.5">
+            <span>▶️</span> <span>Iniciar Desplazamiento</span>
+          </button>
+
+          <button onclick="resetPrompterScroll()" class="px-2.5 py-2 rounded-xl border theme-card font-bold hover:opacity-90 cursor-pointer">
+            ⬆️ Inicio
+          </button>
+
+          <div class="theme-card border rounded-xl px-2.5 py-1 flex flex-col justify-center">
+            <div class="flex justify-between font-bold text-[11px]">
+              <span>🐢 Velocidad:</span>
+              <span id="speed-label" class="font-mono font-extrabold">3</span>
+            </div>
+            <input id="prompter-speed" type="range" min="1" max="10" value="3" oninput="updateSpeedLabel()" class="w-full accent-amber-500 mt-0.5 cursor-pointer" />
+          </div>
+
+          <div class="theme-card border rounded-xl px-2.5 py-1 flex flex-col justify-center">
+            <div class="flex justify-between font-bold text-[11px]">
+              <span>🔠 Tamaño:</span>
+              <span id="font-size-label" class="font-mono font-extrabold">32px</span>
+            </div>
+            <input id="prompter-font" type="range" min="20" max="56" value="32" oninput="updatePrompterFont()" class="w-full accent-amber-500 mt-0.5 cursor-pointer" />
+          </div>
+
+          <button onclick="toggleReadingGuide()" id="btn-guide" class="theme-card border rounded-xl px-2 py-1 font-bold flex flex-col items-center justify-center hover:opacity-90 cursor-pointer">
+            <span class="text-[11px]">📏 Guía Central</span>
+            <span id="guide-status" class="theme-accent-bg px-1.5 rounded text-[10px] mt-0.5 font-extrabold">ON</span>
+          </button>
+
+          <div class="flex gap-1.5">
+            <button onclick="toggleMirror()" id="btn-mirror" title="Modo Espejo" class="flex-1 theme-card border rounded-xl p-1 font-bold flex flex-col items-center justify-center hover:opacity-90 cursor-pointer">
+              <span class="text-sm">🪞</span>
+              <span id="mirror-status" class="text-[10px] theme-muted">Normal</span>
+            </button>
+            <button onclick="speakScript()" id="tts-btn" title="Leer guion en voz alta (Apoyo DUA)" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white rounded-xl p-1 font-bold flex flex-col items-center justify-center shadow cursor-pointer">
+              <span class="text-sm">🗣️</span>
+              <span class="text-[10px]">Voz TTS</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Ventana de Lectura del Teleprompter -->
+        <div class="relative flex-1 min-h-[300px] rounded-2xl border-2 border-slate-600 overflow-hidden theme-card">
+          <div id="reading-guide-bar" class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 border-y-2 border-amber-500/80 bg-amber-500/10 z-10 flex items-center justify-between px-3">
+            <span class="text-amber-400 font-extrabold text-xl">▶</span>
+            <span class="text-amber-400 font-extrabold text-xl">◀</span>
+          </div>
+
+          <div id="teleprompter-box" class="h-full overflow-y-auto px-6 sm:px-10 py-36 space-y-6" style="font-size: 32px;"></div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA (5 de 12 cols): 6 CAJONES DE PISTAS + EFECTOS EN VIVO -->
+      <div class="md:col-span-5 theme-panel border-2 rounded-2xl p-3.5 flex flex-col min-h-[520px] md:h-full overflow-hidden shadow-lg">
+        
+        <!-- Cabecera Fija de la Consola Derecha -->
+        <div class="pb-2.5 border-b border-slate-700/50 space-y-2 shrink-0">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <div id="eq-visualizer" class="w-8 h-7 rounded-lg theme-card border flex items-end justify-center gap-0.5 p-1 shrink-0">
+                <div class="w-1 bg-slate-500 rounded-full h-2"></div>
+                <div class="w-1 bg-slate-500 rounded-full h-3"></div>
+                <div class="w-1 bg-slate-500 rounded-full h-2"></div>
+                <div class="w-1 bg-slate-500 rounded-full h-4"></div>
+              </div>
+              <div class="min-w-0">
+                <div class="text-[10px] font-bold uppercase theme-muted leading-none">Consola de Audio en Vivo</div>
+                <div id="mixer-status-label" class="text-xs font-extrabold truncate">En espera</div>
+              </div>
+            </div>
+
+            <button onclick="stopAllSounds()" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase shadow cursor-pointer shrink-0">
+              ⏹️ PARAR TODO
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+            <button onclick="playSound('sintonia_oficial', this)" class="py-2 px-3 rounded-xl theme-accent-bg font-extrabold text-xs shadow hover:opacity-95 transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>🎶</span>
+              <span>Sintonía Oficial (12s)</span>
+            </button>
+
+            <div class="theme-card border rounded-xl px-2.5 py-1.5 flex items-center gap-1.5">
+              <span class="text-[11px] font-bold whitespace-nowrap">🔊 Efectos:</span>
+              <input id="master-vol" type="range" min="0" max="1" step="0.05" value="0.85" oninput="document.getElementById('master-vol-val').textContent = Math.round(this.value*100)+'%'" class="w-full accent-amber-500 cursor-pointer" />
+              <span id="master-vol-val" class="text-[11px] font-mono font-bold w-8 text-right">85%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZONA CON SCROLL INTERNO PROPIO: 6 CAJONES DE PISTAS + BATERÍA DE EFECTOS -->
+        <div class="flex-1 overflow-y-auto pr-1 pt-3 space-y-4">
+          
+          <!-- BLOQUE A: LOS 6 CAJONES DE PISTAS CARGADAS (SLOTS 1 AL 6) -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-amber-400">
+                🎧 6 Cajones de Pistas del Programa (Local o URL)
+              </h2>
+              <span class="text-[10px] theme-muted">Siempre visibles en directo</span>
+            </div>
+
+            <div id="six-slots-container" class="space-y-2.5"></div>
+          </div>
+
+          <!-- BLOQUE B: BATERÍA DE EFECTOS ESPECIALES Y SINTONÍAS INTEGRADOS -->
+          <div class="space-y-2 pt-3 border-t border-slate-700/50">
+            <div class="flex items-center justify-between gap-2">
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-amber-400">
+                ⚡ Efectos Especiales y Ambientes (24)
+              </h2>
+              <select id="sfx-filter" onchange="filterCabinaSfx()" class="theme-card border rounded-lg px-2 py-1 text-[11px] font-bold cursor-pointer">
+                <option value="all">Todos (24)</option>
+                <option value="cabeceras">📻 Cabeceras y Noticias</option>
+                <option value="espacial">🚀 Espacial / Sci-Fi</option>
+                <option value="concursos">🔔 Timbres y Público</option>
+                <option value="ambientes">🌦️ Ambientes Bucle</option>
+              </select>
+            </div>
+
+            <div id="cabina-sfx-grid" class="grid grid-cols-2 gap-2 pb-2"></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- VISTA 2: REPOSITORIOS LIBRES DE DERECHOS Y GUÍA DE PREPARACIÓN         -->
+    <!-- ====================================================================== -->
+    <section id="view-repos" class="hidden flex-1 overflow-y-auto space-y-6 p-1">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-7 theme-panel border-2 rounded-2xl p-5 space-y-4">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded theme-accent-bg">Bancos Seguros para Educación</span>
+            <h2 class="text-lg font-extrabold mt-1.5">🌐 Repositorios Gratuitos de Música y Efectos Libres de Derechos</h2>
+            <p class="text-xs theme-muted mt-1">Descarga música instrumental y efectos reales sin problemas de copyright para cargarlos en cualquiera de los <strong>6 Cajones de la Cabina</strong> o editarlos en Audacity:</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <a href="https://pixabay.com/es/music/" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl border theme-card hover:border-amber-500 transition">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-sm">🎵 Pixabay Music & SFX</span>
+                <span class="text-xs font-bold text-amber-400">Abrir ↗</span>
+              </div>
+              <p class="text-xs theme-muted mt-1.5">Miles de canciones instrumentales, cortinillas y efectos de sonido gratuitos sin atribución obligatoria. Descarga directa en MP3.</p>
+            </a>
+
+            <a href="https://freesound.org/" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl border theme-card hover:border-amber-500 transition">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-sm">🔊 Freesound.org</span>
+                <span class="text-xs font-bold text-amber-400">Abrir ↗</span>
+              </div>
+              <p class="text-xs theme-muted mt-1.5">El mayor archivo colaborativo de efectos reales (pasos, puertas, naturaleza, ciudad, animales) con licencias Creative Commons.</p>
+            </a>
+
+            <a href="https://sound-effects.bbcrewind.co.uk/" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl border theme-card hover:border-amber-500 transition">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-sm">📻 BBC Sound Effects</span>
+                <span class="text-xs font-bold text-amber-400">Abrir ↗</span>
+              </div>
+              <p class="text-xs theme-muted mt-1.5">Más de 33.000 grabaciones ambientales y efectos sonoros de la BBC disponibles gratuitamente para uso educativo y escolar.</p>
+            </a>
+
+            <a href="https://freemusicarchive.org/static" target="_blank" rel="noopener noreferrer" class="block p-4 rounded-xl border theme-card hover:border-amber-500 transition">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-sm">🎼 Free Music Archive (FMA)</span>
+                <span class="text-xs font-bold text-amber-400">Abrir ↗</span>
+              </div>
+              <p class="text-xs theme-muted mt-1.5">Catálogo de música libre de derechos clasificada por géneros (acústica, infantil, electrónica, bandas sonoras).</p>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 theme-panel border-2 rounded-2xl p-5 space-y-4">
+          <h2 class="text-lg font-extrabold">📋 Guía de Preparación Previa del Programa</h2>
+          <div class="space-y-3 text-xs">
+            <div class="theme-card border rounded-xl p-3.5 space-y-1">
+              <div class="font-extrabold text-amber-400">Paso 1: Reúne tus audios en una carpeta</div>
+              <p class="theme-muted">Descarga las canciones o efectos que necesites en una carpeta del escritorio (ej. <code>Programa_4Primaria</code>) o ten a mano sus enlaces directos <code>.mp3</code>.</p>
+            </div>
+            <div class="theme-card border rounded-xl p-3.5 space-y-1">
+              <div class="font-extrabold text-sky-400">Paso 2: Asigna los 6 Cajones de la Cabina</div>
+              <p class="theme-muted">En la pestaña <strong>Cabina en Directo</strong>, carga cada pista en su cajón (Cajón 1: Sintonía entrada, Cajón 2: Música fondo noticias, Cajón 3: Entrevista, etc.) y ponle un nombre claro.</p>
+            </div>
+            <div class="theme-card border rounded-xl p-3.5 space-y-1">
+              <div class="font-extrabold text-emerald-400">Paso 3: Modula en directo sin cortar</div>
+              <p class="theme-muted">Cuando empiece a hablar el alumnado, pulsa <strong>🔉 Fondo Voz (20%)</strong> en el cajón que esté sonando; la música bajará suavemente sin cortarse de golpe.</p>
+            </div>
+            <div class="p-3.5 rounded-xl border border-amber-500/40 bg-amber-500/10">
+              <div class="font-extrabold text-amber-300">⚠️ Nota sobre enlaces URL externos</div>
+              <p class="theme-muted mt-1">Algunos servidores web bloquean la reproducción externa por seguridad (CORS). Si un enlace URL da error al darle a Play, descárgalo a tu PC y cárgalo con el botón <strong>📂 Archivo</strong> del cajón.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================== -->
+    <!-- VISTA 3: GUÍA FLUJO AUDACITY, CHECKLIST Y NOMENCLATURA DE ARCHIVO      -->
+    <!-- ====================================================================== -->
+    <section id="view-guide" class="hidden flex-1 overflow-y-auto space-y-6 p-1">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-7 space-y-5">
+          <div class="theme-panel border-2 rounded-2xl p-5 space-y-4">
+            <h2 class="text-lg font-extrabold flex items-center gap-2">
+              <span>🎚️</span> Flujo de Trabajo: Mesa USB + Cabina Digital + Audacity
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="theme-card border rounded-xl p-3.5 space-y-1">
+                <div class="font-extrabold text-amber-400">1. Conexión USB</div>
+                <p class="theme-muted">Conecta la mesa de mezclas al ordenador por USB. Selecciona la mesa USB tanto en <strong>Entrada (Micrófono)</strong> como en <strong>Salida (Altavoces/Auriculares)</strong>.</p>
+              </div>
+              <div class="theme-card border rounded-xl p-3.5 space-y-1">
+                <div class="font-extrabold text-sky-400">2. Grabación en Audacity</div>
+                <p class="theme-muted">Abre Audacity, elige el micrófono USB de la mesa y pulsa <strong>Grabar (R)</strong>. Todo lo que hables por los micros + las pistas de esta cabina se grabará limpio.</p>
+              </div>
+              <div class="theme-card border rounded-xl p-3.5 space-y-1">
+                <div class="font-extrabold text-emerald-400">3. Edición y Mejora</div>
+                <p class="theme-muted">Al terminar, detén Audacity, recorta pausas, aplica <em>Reducción de ruido</em> o <em>Normalizar</em>, y exporta en <strong>Archivo → Exportar como MP3</strong>.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-panel border-2 rounded-2xl p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-extrabold">✅ Checklist Antes de Pulsar REC en Audacity</h2>
+              <span id="checklist-progress" class="text-xs font-extrabold px-2.5 py-1 rounded-full theme-accent-bg">0 / 6 listos</span>
+            </div>
+            <div id="checklist-container" class="space-y-2"></div>
+            <button onclick="resetChecklist()" class="text-xs theme-muted underline cursor-pointer">Reiniciar lista de comprobación</button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-5">
+          <div class="theme-panel border-2 rounded-2xl p-5 space-y-3">
+            <h2 class="text-lg font-extrabold">💾 Generador Oficial de Nombre de Archivo</h2>
+            <p class="text-xs theme-muted">Usa este nombre estándar al guardar el proyecto <code>.aup3</code> y al exportar el <code>.mp3</code> en Audacity:</p>
+
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs theme-muted block mb-1 font-bold">Etapa / Curso</label>
+                <select id="file-stage" onchange="updateFileName()" class="w-full theme-card border rounded-xl px-3 py-2 text-sm font-semibold">
+                  <option value="Infantil-3a">Infantil 3 años</option>
+                  <option value="Infantil-4a">Infantil 4 años</option>
+                  <option value="Infantil-5a">Infantil 5 años</option>
+                  <option value="1-Primaria">1º Primaria</option>
+                  <option value="2-Primaria">2º Primaria</option>
+                  <option value="3-Primaria">3º Primaria</option>
+                  <option value="4-Primaria" selected>4º Primaria</option>
+                  <option value="5-Primaria">5º Primaria</option>
+                  <option value="6-Primaria">6º Primaria</option>
+                  <option value="1-ESO">1º ESO</option>
+                  <option value="2-ESO">2º ESO</option>
+                  <option value="Claustro-Familias">Especial Claustro / Familias</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs theme-muted block mb-1 font-bold">Título corto del programa</label>
+                <input id="file-topic" type="text" value="Viaje-Ad-Gemellas" oninput="updateFileName()" class="w-full theme-card border rounded-xl px-3 py-2 text-sm font-semibold" />
+              </div>
+            </div>
+
+            <div class="theme-card border border-amber-500/40 rounded-xl p-3 flex items-center justify-between gap-2">
+              <code id="generated-filename" class="text-xs sm:text-sm font-mono font-bold truncate"></code>
+              <button onclick="copyFilename()" class="px-3 py-1.5 rounded-lg theme-accent-bg text-xs font-extrabold shrink-0 cursor-pointer">
+                📋 Copiar
+              </button>
+            </div>
+          </div>
+
+          <div class="theme-panel border-2 rounded-2xl p-5 space-y-3">
+            <h2 class="text-lg font-extrabold">🆘 Solución Rápida en el Estudio</h2>
+            <div class="space-y-2 text-xs">
+              <details class="theme-card border rounded-xl p-3">
+                <summary class="font-bold cursor-pointer">🔇 Audacity graba mi voz pero no la música de esta web</summary>
+                <p class="mt-2 theme-muted">Asegúrate de que el audio de Windows sale hacia la mesa USB (canal USB/Line In de la mesa) y que ese canal tiene el volumen subido en la mesa física.</p>
+              </details>
+              <details class="theme-card border rounded-xl p-3">
+                <summary class="font-bold cursor-pointer">🔊 Se escucha pitido o eco (acople)</summary>
+                <p class="mt-2 theme-muted">Apaga o baja a cero los altavoces de la sala. Los locutores deben escucharse siempre por los auriculares conectados a la mesa.</p>
+              </details>
+              <details class="theme-card border rounded-xl p-3">
+                <summary class="font-bold cursor-pointer">🎶 La canción tapa la voz del alumno</summary>
+                <p class="mt-2 theme-muted">Pulsa el botón <strong>🔉 Fondo Voz (20%)</strong> en el cajón correspondiente justo antes de que el alumno empiece a hablar.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ÁREA DE IMPRESIÓN / EXPORTACIÓN PDF -->
+  <div id="print-area" class="hidden"></div>
+
+  <script>
+    /* ==========================================================================
+       1. ACCESIBILIDAD GLOBAL DUA
+       ========================================================================== */
+    let currentScale = 1;
+    let isDyslexia = false;
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      showToast('Tema visual actualizado');
+    }
+
+    function toggleDyslexia() {
+      isDyslexia = !isDyslexia;
+      document.documentElement.setAttribute('data-dyslexia', String(isDyslexia));
+      const stateEl = document.getElementById('dyslexia-state');
+      const btnEl = document.getElementById('btn-dyslexia');
+      stateEl.textContent = isDyslexia ? 'ON' : 'OFF';
+      btnEl.setAttribute('aria-pressed', String(isDyslexia));
+      showToast(isDyslexia ? 'Modo Lectura Fácil / Dislexia activado' : 'Modo Lectura Fácil desactivado');
+    }
+
+    function changeGlobalScale(delta) {
+      currentScale = Math.min(1.35, Math.max(0.85, +(currentScale + delta).toFixed(2)));
+      document.documentElement.style.setProperty('--base-scale', currentScale);
+    }
+
+    function resetGlobalScale() {
+      currentScale = 1;
+      document.documentElement.style.setProperty('--base-scale', 1);
+    }
+
+    /* ==========================================================================
+       2. MOTOR DE AUDIO SINTETIZADO (SINTONÍA OFICIAL + 24 EFECTOS)
+       ========================================================================== */
+    let audioCtx = null;
+    const activeLoops = {};
+    let visualTimeout = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function getMasterGain() {
+      return parseFloat(document.getElementById('master-vol').value || 0.85);
+    }
+
+    function setMixerVisualStatus(label, durationMs = 2500) {
+      const lbl = document.getElementById('mixer-status-label');
+      const bars = document.querySelectorAll('#eq-visualizer div');
+      if (visualTimeout) clearTimeout(visualTimeout);
+
+      if (label) {
+        lbl.textContent = label;
+        bars.forEach(b => {
+          b.classList.remove('bg-slate-500');
+          b.classList.add('bg-amber-400', 'eq-bar');
+        });
+        if (durationMs > 0) {
+          visualTimeout = setTimeout(() => {
+            if (Object.keys(activeLoops).length === 0) setMixerVisualStatus(null);
+          }, durationMs);
+        }
+      } else {
+        lbl.textContent = 'En espera';
+        bars.forEach(b => {
+          b.classList.remove('bg-amber-400', 'eq-bar');
+          b.classList.add('bg-slate-500');
+        });
+      }
+    }
+
+    function playNote(ctx, freq, startTime, duration, type = 'triangle', volume = 0.3, slideTo = null) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      if (slideTo) {
+        osc.frequency.exponentialRampToValueAtTime(slideTo, startTime + duration);
+      }
+
+      const master = getMasterGain();
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(volume * master, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.03);
+    }
+
+    function createNoiseBuffer(ctx, durationSec) {
+      const bufferSize = ctx.sampleRate * durationSec;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      return buffer;
+    }
+
+    const SFX_CATALOG = [
+      { id: 'intro', cat: 'cabeceras', icon: '🎵', name: 'Entrada Corta', loop: false, color: 'bg-amber-600 hover:bg-amber-500' },
+      { id: 'outro', cat: 'cabeceras', icon: '🌅', name: 'Melodía Cierre', loop: false, color: 'bg-indigo-600 hover:bg-indigo-500' },
+      { id: 'news', cat: 'cabeceras', icon: '📰', name: 'Cambio Noticias', loop: false, color: 'bg-sky-600 hover:bg-sky-500' },
+      { id: 'breaking', cat: 'cabeceras', icon: '🚨', name: 'Última Hora', loop: false, color: 'bg-rose-600 hover:bg-rose-500' },
+      { id: 'section_swoosh', cat: 'cabeceras', icon: '🔀', name: 'Cambio Sección', loop: false, color: 'bg-teal-600 hover:bg-teal-500' },
+      { id: 'magic', cat: 'cabeceras', icon: '✨', name: 'Paso de Página', loop: false, color: 'bg-fuchsia-600 hover:bg-fuchsia-500' },
+      { id: 'space_ship', cat: 'espacial', icon: '🛸', name: 'Nave Espacial', loop: true, color: 'bg-violet-700 hover:bg-violet-600' },
+      { id: 'laser', cat: 'espacial', icon: '🔫', name: 'Rayo Láser', loop: false, color: 'bg-cyan-600 hover:bg-cyan-500' },
+      { id: 'rocket', cat: 'espacial', icon: '🚀', name: 'Despegue Cohete', loop: false, color: 'bg-orange-600 hover:bg-orange-500' },
+      { id: 'alien_radar', cat: 'espacial', icon: '📡', name: 'Radar Alienígena', loop: false, color: 'bg-emerald-700 hover:bg-emerald-600' },
+      { id: 'hyperspace', cat: 'espacial', icon: '🌌', name: 'Hiperespacio', loop: false, color: 'bg-indigo-700 hover:bg-indigo-600' },
+      { id: 'school_bell', cat: 'concursos', icon: '🏫', name: 'Timbre Colegio', loop: false, color: 'bg-yellow-600 hover:bg-yellow-500' },
+      { id: 'correct', cat: 'concursos', icon: '✅', name: 'Acierto / Punto', loop: false, color: 'bg-emerald-600 hover:bg-emerald-500' },
+      { id: 'wrong', cat: 'concursos', icon: '❌', name: 'Error / Bocina', loop: false, color: 'bg-red-700 hover:bg-red-600' },
+      { id: 'drumroll', cat: 'concursos', icon: '🥁', name: 'Redoble Tambor', loop: false, color: 'bg-purple-600 hover:bg-purple-500' },
+      { id: 'tictac', cat: 'concursos', icon: '⏱️', name: 'Reloj Tic-Tac', loop: false, color: 'bg-slate-600 hover:bg-slate-500' },
+      { id: 'applause', cat: 'concursos', icon: '👏', name: 'Aplausos', loop: false, color: 'bg-blue-600 hover:bg-blue-500' },
+      { id: 'laughter', cat: 'concursos', icon: '😂', name: 'Risas Estudio', loop: false, color: 'bg-pink-600 hover:bg-pink-500' },
+      { id: 'whistle', cat: 'concursos', icon: '📣', name: 'Silbato Deporte', loop: false, color: 'bg-lime-700 hover:bg-lime-600' },
+      { id: 'rain', cat: 'ambientes', icon: '🌧️', name: 'Lluvia Suave', loop: true, color: 'bg-cyan-800 hover:bg-cyan-700' },
+      { id: 'wind', cat: 'ambientes', icon: '🌬️', name: 'Viento Misterio', loop: true, color: 'bg-slate-700 hover:bg-slate-600' },
+      { id: 'forest', cat: 'ambientes', icon: '🐦', name: 'Bosque Pájaros', loop: true, color: 'bg-green-800 hover:bg-green-700' },
+      { id: 'classroom', cat: 'ambientes', icon: '🎒', name: 'Ambiente Aula', loop: true, color: 'bg-orange-800 hover:bg-orange-700' },
+      { id: 'ocean', cat: 'ambientes', icon: '🌊', name: 'Olas del Mar', loop: true, color: 'bg-blue-800 hover:bg-blue-700' }
+    ];
+
+    function renderCabinaSfxGrid(filter = 'all') {
+      const grid = document.getElementById('cabina-sfx-grid');
+      const items = filter === 'all' ? SFX_CATALOG : SFX_CATALOG.filter(s => s.cat === filter);
+
+      grid.innerHTML = items.map(s => {
+        if (s.loop) {
+          const isActive = Boolean(activeLoops[s.id]);
+          return `
+            <button onclick="toggleLoop('${s.id}')" id="loop-${s.id}" class="sound-pad p-2 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center justify-between gap-1 cursor-pointer ${isActive ? 'ring-2 ring-amber-300' : ''}">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="text-sm shrink-0">${s.icon}</span>
+                <span class="text-[11px] font-extrabold truncate">${s.name}</span>
+              </div>
+              <span class="text-[9px] uppercase px-1.5 py-0.5 rounded ${isActive ? 'bg-emerald-500 text-slate-950 font-extrabold' : 'bg-black/40'} shrink-0">${isActive ? 'ON' : 'Bucle'}</span>
+            </button>
+          `;
+        }
+        return `
+          <button onclick="playSound('${s.id}', this)" class="sound-pad p-2 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center gap-1.5 cursor-pointer">
+            <span class="text-sm shrink-0">${s.icon}</span>
+            <span class="text-[11px] font-extrabold truncate">${s.name}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function filterCabinaSfx() {
+      const val = document.getElementById('sfx-filter').value;
+      renderCabinaSfxGrid(val);
+    }
+
+    function playSound(type, btnEl) {
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
+      const master = getMasterGain();
+
+      if (btnEl) {
+        btnEl.classList.add('pad-active');
+        setTimeout(() => btnEl.classList.remove('pad-active'), 240);
+      }
+
+      if (type === 'sintonia_oficial') {
+        setMixerVisualStatus('Sintonía Oficial Ad-Gemellas', 12000);
+        const beat = 0.25;
+        const bassPattern = [130.81, 130.81, 164.81, 196.00, 220.00, 220.00, 196.00, 164.81];
+        for (let bar = 0; bar < 5; bar++) {
+          bassPattern.forEach((freq, idx) => {
+            playNote(ctx, freq, now + (bar * 8 + idx) * beat, beat * 0.85, 'sawtooth', 0.14);
+          });
+        }
+        const melody = [
+          [523.25, 0, 0.4], [659.25, 0.5, 0.4], [783.99, 1.0, 0.6], [659.25, 1.75, 0.4],
+          [880.00, 2.25, 0.7], [783.99, 3.0, 0.8],
+          [698.46, 4.0, 0.4], [659.25, 4.5, 0.4], [587.33, 5.0, 0.5], [659.25, 5.6, 0.4],
+          [783.99, 6.2, 1.2],
+          [523.25, 7.8, 0.35], [659.25, 8.2, 0.35], [783.99, 8.6, 0.35], [1046.50, 9.0, 1.4],
+          [783.99, 10.5, 0.3], [1046.50, 10.9, 1.1]
+        ];
+        melody.forEach(([freq, offset, dur]) => {
+          playNote(ctx, freq, now + offset, dur, 'triangle', 0.32);
+          playNote(ctx, freq * 0.5, now + offset, dur, 'sine', 0.2);
+        });
+        return;
+      }
+
+      const item = SFX_CATALOG.find(s => s.id === type);
+      if (item) setMixerVisualStatus(item.name, 2200);
+
+      if (type === 'intro') {
+        [[261.63, 0, 0.2], [329.63, 0.2, 0.2], [392.00, 0.4, 0.2], [523.25, 0.6, 0.5], [392.00, 1.15, 0.2], [523.25, 1.4, 0.9]]
+          .forEach(([f, t, d]) => playNote(ctx, f, now + t, d, 'triangle', 0.35));
+      } else if (type === 'outro') {
+        [[523.25, 0, 0.4], [493.88, 0.4, 0.4], [440.00, 0.8, 0.4], [392.00, 1.2, 0.6], [329.63, 1.8, 0.6], [261.63, 2.4, 1.4]]
+          .forEach(([f, t, d]) => playNote(ctx, f, now + t, d, 'sine', 0.32));
+      } else if (type === 'news') {
+        [[587.33, 0, 0.12], [587.33, 0.15, 0.12], [880.00, 0.3, 0.35], [587.33, 0.7, 0.12], [987.77, 0.85, 0.5]]
+          .forEach(([f, t, d]) => playNote(ctx, f, now + t, d, 'sawtooth', 0.22));
+      } else if (type === 'breaking') {
+        for (let i = 0; i < 6; i++) playNote(ctx, i % 2 === 0 ? 960 : 720, now + i * 0.18, 0.14, 'square', 0.22);
+      } else if (type === 'section_swoosh') {
+        playNote(ctx, 220, now, 0.45, 'sine', 0.3, 880);
+        playNote(ctx, 440, now + 0.1, 0.4, 'triangle', 0.2, 1320);
+      } else if (type === 'magic') {
+        [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98].forEach((f, i) => playNote(ctx, f, now + i * 0.09, 0.45, 'sine', 0.26));
+      } else if (type === 'laser') {
+        playNote(ctx, 1400, now, 0.28, 'sawtooth', 0.3, 140);
+        playNote(ctx, 900, now + 0.03, 0.25, 'square', 0.15, 90);
+      } else if (type === 'rocket') {
+        const buffer = createNoiseBuffer(ctx, 3.2);
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(140, now);
+        filter.frequency.exponentialRampToValueAtTime(950, now + 2.8);
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.5 * master, now + 1.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 3.2);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(now);
+      } else if (type === 'alien_radar') {
+        for (let i = 0; i < 8; i++) {
+          const f = 600 + Math.sin(i) * 450;
+          playNote(ctx, f, now + i * 0.14, 0.12, 'sine', 0.28, f * 1.3);
+        }
+      } else if (type === 'hyperspace') {
+        playNote(ctx, 110, now, 1.6, 'sawtooth', 0.28, 1760);
+        playNote(ctx, 165, now, 1.6, 'sine', 0.3, 2400);
+      } else if (type === 'school_bell') {
+        for (let i = 0; i < 18; i++) {
+          playNote(ctx, 1320, now + i * 0.09, 0.06, 'triangle', 0.28);
+          playNote(ctx, 1760, now + i * 0.09 + 0.03, 0.05, 'sine', 0.22);
+        }
+      } else if (type === 'correct') {
+        playNote(ctx, 587.33, now, 0.15, 'sine', 0.35);
+        playNote(ctx, 880.00, now + 0.14, 0.5, 'sine', 0.35);
+      } else if (type === 'wrong') {
+        playNote(ctx, 185.00, now, 0.25, 'sawtooth', 0.3);
+        playNote(ctx, 138.59, now + 0.25, 0.55, 'sawtooth', 0.3);
+      } else if (type === 'drumroll') {
+        const buffer = createNoiseBuffer(ctx, 2.2);
+        for (let i = 0; i < 24; i++) {
+          const t = now + i * 0.085;
+          const src = ctx.createBufferSource();
+          src.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.value = 320;
+          const g = ctx.createGain();
+          g.gain.setValueAtTime((0.12 + i * 0.015) * master, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+          src.connect(filter);
+          filter.connect(g);
+          g.connect(ctx.destination);
+          src.start(t, 0, 0.07);
+        }
+        playNote(ctx, 130.81, now + 2.05, 0.45, 'triangle', 0.4);
+      } else if (type === 'tictac') {
+        for (let i = 0; i < 10; i++) playNote(ctx, i % 2 === 0 ? 880 : 660, now + i * 0.5, 0.06, 'sine', 0.3);
+      } else if (type === 'applause') {
+        const buffer = createNoiseBuffer(ctx, 2.8);
+        for (let i = 0; i < 28; i++) {
+          const t = now + Math.random() * 2.1;
+          const src = ctx.createBufferSource();
+          src.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.value = 1100 + Math.random() * 600;
+          const g = ctx.createGain();
+          g.gain.setValueAtTime(0.24 * master, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+          src.connect(filter);
+          filter.connect(g);
+          g.connect(ctx.destination);
+          src.start(t, Math.random(), 0.15);
+        }
+      } else if (type === 'laughter') {
+        [440, 392, 440, 370, 415, 349, 392, 330].forEach((f, i) => playNote(ctx, f, now + i * 0.16, 0.12, 'triangle', 0.25));
+      } else if (type === 'whistle') {
+        playNote(ctx, 2850, now, 0.55, 'sine', 0.25, 2750);
+      }
+    }
+
+    function toggleLoop(loopName) {
+      const ctx = getAudioContext();
+      if (activeLoops[loopName]) {
+        stopSingleLoop(loopName);
+        return;
+      }
+
+      const master = getMasterGain();
+      const buffer = createNoiseBuffer(ctx, 4);
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.loop = true;
+
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      let extraOsc = null;
+      let waveInterval = null;
+
+      if (loopName === 'rain') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 850;
+        gain.gain.value = 0.22 * master;
+      } else if (loopName === 'wind') {
+        filter.type = 'bandpass';
+        filter.frequency.value = 340;
+        filter.Q.value = 4.5;
+        gain.gain.value = 0.3 * master;
+      } else if (loopName === 'forest') {
+        filter.type = 'bandpass';
+        filter.frequency.value = 1400;
+        filter.Q.value = 1.5;
+        gain.gain.value = 0.12 * master;
+      } else if (loopName === 'classroom') {
+        filter.type = 'bandpass';
+        filter.frequency.value = 600;
+        filter.Q.value = 2;
+        gain.gain.value = 0.2 * master;
+      } else if (loopName === 'ocean') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 420;
+        gain.gain.value = 0.25 * master;
+        waveInterval = setInterval(() => {
+          if (!activeLoops.ocean) return;
+          const t = ctx.currentTime;
+          gain.gain.setValueAtTime(0.12 * getMasterGain(), t);
+          gain.gain.linearRampToValueAtTime(0.32 * getMasterGain(), t + 1.8);
+          gain.gain.linearRampToValueAtTime(0.12 * getMasterGain(), t + 3.6);
+        }, 3800);
+      } else if (loopName === 'space_ship') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 180;
+        gain.gain.value = 0.28 * master;
+        extraOsc = ctx.createOscillator();
+        extraOsc.type = 'sine';
+        extraOsc.frequency.value = 65;
+        const oscGain = ctx.createGain();
+        oscGain.gain.value = 0.18 * master;
+        extraOsc.connect(oscGain);
+        oscGain.connect(ctx.destination);
+        extraOsc.start();
+      }
+
+      src.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      src.start();
+
+      let birdInterval = null;
+      if (loopName === 'forest') {
+        birdInterval = setInterval(() => {
+          if (!activeLoops.forest) return;
+          const t = ctx.currentTime;
+          playNote(ctx, 2200 + Math.random() * 800, t, 0.08, 'sine', 0.14);
+          playNote(ctx, 2600 + Math.random() * 600, t + 0.11, 0.09, 'sine', 0.14);
+        }, 2300);
+      }
+
+      activeLoops[loopName] = { src, extraOsc, birdInterval, waveInterval };
+      setMixerVisualStatus(`Ambiente: ${loopName}`, 0);
+      filterCabinaSfx();
+    }
+
+    function stopSingleLoop(loopName) {
+      const item = activeLoops[loopName];
+      if (!item) return;
+      try { item.src.stop(); } catch (e) {}
+      if (item.extraOsc) { try { item.extraOsc.stop(); } catch (e) {} }
+      if (item.birdInterval) clearInterval(item.birdInterval);
+      if (item.waveInterval) clearInterval(item.waveInterval);
+      delete activeLoops[loopName];
+      if (Object.keys(activeLoops).length === 0) setMixerVisualStatus(null);
+      filterCabinaSfx();
+    }
+
+    function stopAllSounds() {
+      Object.keys(activeLoops).forEach(stopSingleLoop);
+      for (let i = 1; i <= 6; i++) {
+        stopSlotAudio(i);
+      }
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      setMixerVisualStatus(null);
+    }
+
+    /* ==========================================================================
+       3. LOS 6 CAJONES DE PISTAS CARGADAS (SLOTS 1 AL 6 - ARCHIVO LOCAL O URL)
+       ========================================================================== */
+    const DEFAULT_SLOT_LABELS = [
+      'Cajón 1 · Sintonía Entrada',
+      'Cajón 2 · Música Fondo Noticias',
+      'Cajón 3 · Cortinilla / Entrevista',
+      'Cajón 4 · Ambiente / Efecto',
+      'Cajón 5 · Sección Especial',
+      'Cajón 6 · Canción de Cierre'
+    ];
+
+    const audioSlots = {};
+    for (let i = 1; i <= 6; i++) {
+      audioSlots[i] = {
+        id: i,
+        customName: DEFAULT_SLOT_LABELS[i - 1],
+        sourceInfo: 'Vacío (Carga archivo o URL)',
+        audio: null,
+        volume: 0.85,
+        fadeInterval: null,
+        urlInputOpen: false
+      };
+    }
+
+    function renderSixSlots() {
+      const container = document.getElementById('six-slots-container');
+      let html = '';
+
+      for (let i = 1; i <= 6; i++) {
+        const slot = audioSlots[i];
+        const hasAudio = Boolean(slot.audio);
+        const isPlaying = hasAudio && !slot.audio.paused;
+
+        html += `
+          <div class="theme-card border ${isPlaying ? 'border-amber-400 ring-1 ring-amber-400/50' : ''} rounded-xl p-2.5 space-y-2 transition">
+            <div class="flex items-center justify-between gap-1.5">
+              <div class="flex-1 min-w-0">
+                <input type="text" value="${escapeHtml(slot.customName)}" onchange="updateSlotCustomName(${i}, this.value)"
+                  class="w-full bg-transparent text-xs font-extrabold border-b border-transparent focus:border-amber-500 focus:outline-none truncate"
+                  title="Haz clic para cambiar el nombre de este cajón" />
+                <div class="text-[10px] theme-muted truncate">${escapeHtml(slot.sourceInfo)}</div>
+              </div>
+
+              <div class="flex items-center gap-1 shrink-0">
+                <label class="cursor-pointer px-2 py-1 rounded-lg border theme-panel hover:border-amber-500 text-[11px] font-bold transition" title="Cargar archivo MP3/WAV/OGG del ordenador">
+                  📂 Archivo
+                  <input type="file" accept="audio/*" class="hidden" onchange="loadSlotLocalFile(${i}, event)" />
+                </label>
+                <button onclick="toggleSlotUrlBox(${i})" class="px-2 py-1 rounded-lg border theme-panel hover:border-amber-500 text-[11px] font-bold transition cursor-pointer" title="Pegar enlace URL directo">
+                  🔗 URL
+                </button>
+              </div>
+            </div>
+
+            <div id="slot-url-box-${i}" class="${slot.urlInputOpen ? '' : 'hidden'} flex items-center gap-1.5 pt-1">
+              <input id="slot-url-input-${i}" type="url" placeholder="https://ejemplo.com/cancion.mp3" class="flex-1 theme-panel border rounded-lg px-2 py-1 text-[11px] font-mono" />
+              <button onclick="applySlotUrl(${i})" class="px-2.5 py-1 rounded-lg theme-accent-bg text-[11px] font-extrabold cursor-pointer">Cargar</button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="toggleSlotPlay(${i})" ${hasAudio ? '' : 'disabled'}
+                class="px-2.5 py-1 rounded-lg ${isPlaying ? 'bg-amber-500 text-slate-950' : 'bg-emerald-600 hover:bg-emerald-500 text-white'} disabled:opacity-35 text-[11px] font-extrabold cursor-pointer">
+                ${isPlaying ? '⏸️ Pausa' : '▶️ Play'}
+              </button>
+
+              <button onclick="stopSlotAudio(${i})" ${hasAudio ? '' : 'disabled'}
+                class="px-2 py-1 rounded-lg border theme-panel disabled:opacity-35 text-[11px] font-bold cursor-pointer" title="Detener y volver al inicio">
+                ⏹️
+              </button>
+
+              <button onclick="fadeSlotVolume(${i}, 0.20)" ${hasAudio ? '' : 'disabled'}
+                class="px-2 py-1 rounded-lg bg-sky-700 hover:bg-sky-600 text-white disabled:opacity-35 text-[11px] font-bold cursor-pointer" title="Baja suavemente al 20% para hablar encima">
+                🔉 Fondo Voz (20%)
+              </button>
+
+              <button onclick="fadeSlotVolume(${i}, 1.0)" ${hasAudio ? '' : 'disabled'}
+                class="px-2 py-1 rounded-lg bg-teal-700 hover:bg-teal-600 text-white disabled:opacity-35 text-[11px] font-bold cursor-pointer" title="Sube suavemente al 100%">
+                🔊 Subir (100%)
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input id="slot-vol-slider-${i}" type="range" min="0" max="1" step="0.02" value="${slot.volume}"
+                oninput="setSlotVolume(${i}, this.value)" class="w-full accent-amber-500 cursor-pointer" />
+              <span id="slot-vol-lbl-${i}" class="text-[11px] font-mono font-bold w-9 text-right">${Math.round(slot.volume * 100)}%</span>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function updateSlotCustomName(slotId, newName) {
+      audioSlots[slotId].customName = newName.trim() || DEFAULT_SLOT_LABELS[slotId - 1];
+    }
+
+    function toggleSlotUrlBox(slotId) {
+      audioSlots[slotId].urlInputOpen = !audioSlots[slotId].urlInputOpen;
+      renderSixSlots();
+    }
+
+    function loadSlotLocalFile(slotId, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      setupSlotAudio(slotId, url, `Archivo: ${file.name}`, file.name.replace(/\.[^/.]+$/, ''));
+      event.target.value = '';
+    }
+
+    function applySlotUrl(slotId) {
+      const input = document.getElementById(`slot-url-input-${slotId}`);
+      const url = input ? input.value.trim() : '';
+      if (!url) {
+        showToast('Introduce un enlace URL válido');
+        return;
+      }
+      audioSlots[slotId].urlInputOpen = false;
+      const shortName = url.split('/').pop().split('?')[0] || `Enlace Cajón ${slotId}`;
+      setupSlotAudio(slotId, url, `URL: ${url}`, shortName);
+    }
+
+    function setupSlotAudio(slotId, url, sourceInfo, suggestedTitle) {
+      const slot = audioSlots[slotId];
+      if (slot.audio) {
+        slot.audio.pause();
+      }
+      const audio = new Audio(url);
+      audio.volume = slot.volume;
+
+      audio.onplay = () => {
+        setMixerVisualStatus(slot.customName, 0);
+        renderSixSlots();
+      };
+      audio.onpause = () => {
+        if (Object.keys(activeLoops).length === 0) setMixerVisualStatus(null);
+        renderSixSlots();
+      };
+      audio.onended = () => {
+        if (Object.keys(activeLoops).length === 0) setMixerVisualStatus(null);
+        renderSixSlots();
+      };
+      audio.onerror = () => {
+        showToast(`No se pudo cargar el audio en Cajón ${slotId}. Si es un enlace externo, descárgalo a tu PC.`);
+      };
+
+      slot.audio = audio;
+      slot.sourceInfo = sourceInfo;
+      if (slot.customName === DEFAULT_SLOT_LABELS[slotId - 1] && suggestedTitle) {
+        slot.customName = `Cajón ${slotId} · ${suggestedTitle}`;
+      }
+
+      renderSixSlots();
+      showToast(`Audio cargado en Cajón ${slotId}`);
+    }
+
+    function toggleSlotPlay(slotId) {
+      const slot = audioSlots[slotId];
+      if (!slot || !slot.audio) return;
+      if (slot.audio.paused) {
+        slot.audio.play().catch(() => {
+          showToast(`Bloqueo CORS en el enlace del Cajón ${slotId}. Descarga el archivo y cárgalo localmente.`);
+        });
+      } else {
+        slot.audio.pause();
+      }
+      renderSixSlots();
+    }
+
+    function stopSlotAudio(slotId) {
+      const slot = audioSlots[slotId];
+      if (!slot || !slot.audio) return;
+      slot.audio.pause();
+      slot.audio.currentTime = 0;
+      renderSixSlots();
+    }
+
+    function setSlotVolume(slotId, val) {
+      const slot = audioSlots[slotId];
+      if (!slot) return;
+      const clamped = Math.min(1, Math.max(0, parseFloat(val)));
+      slot.volume = clamped;
+      if (slot.audio) slot.audio.volume = clamped;
+      const lbl = document.getElementById(`slot-vol-lbl-${slotId}`);
+      const slider = document.getElementById(`slot-vol-slider-${slotId}`);
+      if (lbl) lbl.textContent = `${Math.round(clamped * 100)}%`;
+      if (slider) slider.value = clamped;
+    }
+
+    function fadeSlotVolume(slotId, targetVol) {
+      const slot = audioSlots[slotId];
+      if (!slot || !slot.audio) return;
+      if (slot.fadeInterval) clearInterval(slot.fadeInterval);
+
+      slot.fadeInterval = setInterval(() => {
+        const diff = targetVol - slot.volume;
+        if (Math.abs(diff) < 0.03) {
+          setSlotVolume(slotId, targetVol);
+          clearInterval(slot.fadeInterval);
+        } else {
+          setSlotVolume(slotId, +(slot.volume + diff * 0.25).toFixed(2));
+        }
+      }, 45);
+    }
+
+    /* ==========================================================================
+       4. TELEPROMPTER INCLUSIVO DUA (MOTOR FLUIDO CON requestAnimationFrame)
+       ========================================================================== */
+    const TEMPLATES = {
+      infantil: `[SINTONÍA OFICIAL RADIO AD-GEMELLAS]
+
+MAESTRA / MAESTRO: ¡Buenos días familias de Palenciana! Hoy los niños y niñas de Infantil del CEIP San José os vamos a contar un viaje espacial.
+
+[EFECTO: DESPEGUE COHETE]
+
+NIÑO 1: ¡Tres, dos, uno... despegamos hacia las estrellas!
+
+[EFECTO: NAVE ESPACIAL]
+
+NIÑA 2: Mirad por la ventana, veo un planeta verde con muchos pajaritos.
+
+[EFECTO: BOSQUE Y PÁJAROS]
+
+TODOS: ¡Colorín colorado, este cuento espacial ha terminado!
+
+[EFECTO: APLAUSOS Y MELODÍA CIERRE]`,
+
+      primaria: `[SINTONÍA OFICIAL RADIO AD-GEMELLAS]
+
+LOCUTOR 1: ¡Bienvenidos a Radio Ad-Gemellas! Les hablamos desde el CEIP San José de Palenciana.
+
+LOCUTOR 2: Hoy tenemos un informativo muy especial con las noticias de nuestro cole.
+
+[EFECTO: CAMBIO NOTICIAS]
+
+LOCUTOR 1: Esta semana celebramos la Semana Cultural y hemos aprendido muchísimo en clase de Lengua y Ciencias.
+
+[EFECTO: TIMBRE COLEGIO]
+
+LOCUTOR 2: ¡Suena el timbre del recreo! Gracias por escucharnos y hasta el próximo programa.
+
+[EFECTO: MELODÍA CIERRE]`,
+
+      eso: `[SINTONÍA OFICIAL RADIO AD-GEMELLAS]
+
+LOCUTOR 1: Muy buenos días a toda la comunidad educativa. Arranca la tertulia de 1º Ciclo de ESO en Radio Ad-Gemellas.
+
+LOCUTOR 2: Hoy viajamos atrás en el tiempo para descubrir por qué nuestra radio lleva el nombre romano de Ad-Gemellas.
+
+[EFECTO: SALTO HIPERESPACIAL]
+
+LOCUTOR 1: Palenciana formaba parte de las rutas históricas de la Bética romana, uniendo pueblos y culturas.
+
+LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la próxima emisión!
+
+[EFECTO: APLAUSOS Y MELODÍA CIERRE]`
+    };
+
+    const TEMPLATE_TITLES = {
+      infantil: 'Cuento Sonorizado: Viaje Espacial (Infantil)',
+      primaria: 'Informativo Escolar: Noticias del CEIP San José (Primaria)',
+      eso: 'Tertulia Histórica: Los orígenes de Ad-Gemellas (1º Ciclo ESO)'
+    };
+
+    let isPrompterScrolling = false;
+    let prompterRafId = null;
+    let exactScrollPos = 0;
+    let lastFrameTime = null;
+    let isGuideActive = true;
+    let isMirrorActive = false;
+    let isEditorOpen = false;
+
+    function loadTemplate(stage) {
+      document.getElementById('script-editor').value = TEMPLATES[stage];
+      document.getElementById('script-title').value = TEMPLATE_TITLES[stage] || 'Programa Radio Ad-Gemellas';
+
+      ['infantil', 'primaria', 'eso'].forEach(st => {
+        const btn = document.getElementById(`tpl-btn-${st}`);
+        if (btn) {
+          btn.classList.toggle('border-amber-500', st === stage);
+          btn.classList.toggle('ring-1', st === stage);
+          btn.classList.toggle('ring-amber-500/40', st === stage);
+        }
+      });
+
+      onScriptInput();
+      resetPrompterScroll();
+      showToast(`Plantilla de ${stage.toUpperCase()} cargada`);
+    }
+
+    function toggleQuickEditor() {
+      const drawer = document.getElementById('quick-editor-drawer');
+      const btn = document.getElementById('btn-toggle-editor');
+      isEditorOpen = !isEditorOpen;
+      drawer.classList.toggle('hidden', !isEditorOpen);
+      btn.textContent = isEditorOpen ? '🔼 Ocultar Editor' : '✏️ Editar Guion';
+      renderTeleprompter();
+    }
+
+    function insertScriptTag(tag) {
+      const textarea = document.getElementById('script-editor');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const val = textarea.value;
+      textarea.value = val.substring(0, start) + `\n${tag}\n` + val.substring(end);
+      textarea.focus();
+      onScriptInput();
+    }
+
+    function onScriptInput() {
+      updateScriptStats();
+      renderTeleprompter();
+    }
+
+    function updateScriptStats() {
+      const text = document.getElementById('script-editor').value.trim();
+      const spoken = text.replace(/\[.*?\]/g, ' ').trim();
+      const words = spoken ? spoken.split(/\s+/).length : 0;
+      const totalSeconds = Math.round((words / 130) * 60);
+      const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const secs = String(totalSeconds % 60).padStart(2, '0');
+      document.getElementById('word-stats').textContent = `${words} pal. · ~${mins}:${secs}`;
+    }
+
+    function renderTeleprompter() {
+      const raw = document.getElementById('script-editor').value;
+      const box = document.getElementById('teleprompter-box');
+      const lines = raw.split('\n');
+
+      const speakerPalette = [
+        'text-sky-400',
+        'text-emerald-400',
+        'text-purple-400',
+        'text-pink-400',
+        'text-amber-300'
+      ];
+      const speakerColors = {};
+      let colorIdx = 0;
+
+      const contentHtml = lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return '<div class="h-4"></div>';
+
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+          return `<div class="px-4 py-2 rounded-xl theme-accent-bg font-extrabold text-center shadow text-base sm:text-lg tracking-wide">${escapeHtml(trimmed)}</div>`;
+        }
+
+        const colonIdx = trimmed.indexOf(':');
+        if (colonIdx > 0 && colonIdx < 28) {
+          const speaker = trimmed.slice(0, colonIdx + 1);
+          const speech = trimmed.slice(colonIdx + 1);
+          if (!speakerColors[speaker]) {
+            speakerColors[speaker] = speakerPalette[colorIdx % speakerPalette.length];
+            colorIdx++;
+          }
+          return `<p class="leading-relaxed"><span class="font-extrabold ${speakerColors[speaker]} underline decoration-2 mr-2">${escapeHtml(speaker)}</span>${escapeHtml(speech)}</p>`;
+        }
+
+        return `<p class="leading-relaxed">${escapeHtml(trimmed)}</p>`;
+      }).join('');
+
+      box.innerHTML = contentHtml + '<div class="h-72"></div>';
+    }
+
+    function updateSpeedLabel() {
+      const val = document.getElementById('prompter-speed').value;
+      document.getElementById('speed-label').textContent = val;
+    }
+
+    function updatePrompterFont() {
+      const size = document.getElementById('prompter-font').value;
+      document.getElementById('font-size-label').textContent = `${size}px`;
+      document.getElementById('teleprompter-box').style.fontSize = `${size}px`;
+    }
+
+    function toggleReadingGuide() {
+      isGuideActive = !isGuideActive;
+      document.getElementById('reading-guide-bar').classList.toggle('hidden', !isGuideActive);
+      document.getElementById('guide-status').textContent = isGuideActive ? 'ON' : 'OFF';
+    }
+
+    function toggleMirror() {
+      isMirrorActive = !isMirrorActive;
+      document.getElementById('teleprompter-box').classList.toggle('teleprompter-mirror', isMirrorActive);
+      document.getElementById('mirror-status').textContent = isMirrorActive ? 'Espejo' : 'Normal';
+    }
+
+    function prompterStep(timestamp) {
+      if (!isPrompterScrolling) return;
+      const box = document.getElementById('teleprompter-box');
+
+      if (lastFrameTime !== null) {
+        const dt = (timestamp - lastFrameTime) / 1000;
+        const speed = parseInt(document.getElementById('prompter-speed').value, 10);
+        const pxPerSec = 10 + speed * 15;
+        exactScrollPos += pxPerSec * dt;
+        box.scrollTop = exactScrollPos;
+
+        if (box.scrollTop + box.clientHeight >= box.scrollHeight - 2) {
+          stopPrompterScroll();
+          showToast('Fin del guion alcanzado');
+          return;
+        }
+      }
+
+      lastFrameTime = timestamp;
+      prompterRafId = requestAnimationFrame(prompterStep);
+    }
+
+    function togglePrompterScroll() {
+      if (isPrompterScrolling) {
+        stopPrompterScroll();
+      } else {
+        const box = document.getElementById('teleprompter-box');
+        if (box.scrollTop + box.clientHeight >= box.scrollHeight - 10) {
+          box.scrollTop = 0;
+        }
+        exactScrollPos = box.scrollTop;
+        lastFrameTime = null;
+        isPrompterScrolling = true;
+
+        const btn = document.getElementById('prompter-play-btn');
+        btn.innerHTML = '<span>⏸️</span> <span>Pausar</span>';
+        btn.classList.replace('bg-emerald-600', 'bg-amber-600');
+        prompterRafId = requestAnimationFrame(prompterStep);
+      }
+    }
+
+    function stopPrompterScroll() {
+      isPrompterScrolling = false;
+      if (prompterRafId) cancelAnimationFrame(prompterRafId);
+      prompterRafId = null;
+      lastFrameTime = null;
+      const btn = document.getElementById('prompter-play-btn');
+      btn.innerHTML = '<span>▶️</span> <span>Iniciar Desplazamiento</span>';
+      btn.classList.replace('bg-amber-600', 'bg-emerald-600');
+    }
+
+    function resetPrompterScroll() {
+      stopPrompterScroll();
+      const box = document.getElementById('teleprompter-box');
+      box.scrollTop = 0;
+      exactScrollPos = 0;
+    }
+
+    function speakScript() {
+      if (!('speechSynthesis' in window)) {
+        showToast('Tu navegador no soporta lectura en voz alta.');
+        return;
+      }
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        showToast('Lectura en voz alta detenida');
+        return;
+      }
+      const raw = document.getElementById('script-editor').value;
+      const cleanText = raw.replace(/\[.*?\]/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'es-ES';
+      utterance.rate = 0.92;
+      window.speechSynthesis.speak(utterance);
+      showToast('Reproduciendo lectura en voz alta (Apoyo DUA)...');
+    }
+
+    function exportScriptPDF() {
+      const title = document.getElementById('script-title').value || 'Guion de Radio';
+      const stats = document.getElementById('word-stats').textContent;
+      const raw = document.getElementById('script-editor').value;
+      const today = new Date().toLocaleDateString('es-ES');
+
+      const formattedBody = raw.split('\n').map(line => {
+        const t = line.trim();
+        if (!t) return '<br/>';
+        if (t.startsWith('[') && t.endsWith(']')) {
+          return `<div style="background:#fef3c7; border:1px solid #d97706; padding:6px 12px; margin:10px 0; font-weight:bold; border-radius:6px;">${escapeHtml(t)}</div>`;
+        }
+        return `<p style="margin:8px 0; font-size:13pt; line-height:1.6;">${escapeHtml(t)}</p>`;
+      }).join('');
+
+      const printArea = document.getElementById('print-area');
+      printArea.innerHTML = `
+        <div style="border-bottom: 3px solid #d97706; padding-bottom: 12px; margin-bottom: 20px;">
+          <div style="font-size: 10pt; font-weight: bold; color: #b45309; text-transform: uppercase;">
+            Radio Ad-Gemellas · CEIP San José (Palenciana)
+          </div>
+          <h1 style="font-size: 18pt; font-weight: 800; margin: 4px 0;">${escapeHtml(title)}</h1>
+          <div style="font-size: 10pt; color: #475569;">Fecha: ${today} · Duración estimada: ${stats}</div>
+        </div>
+        <div>${formattedBody}</div>
+      `;
+
+      printArea.classList.remove('hidden');
+      window.print();
+      printArea.classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       5. CRONÓMETRO, PILOTO EN EL AIRE, PESTAÑAS Y CHECKLIST
+       ========================================================================== */
+    let isOnAir = false;
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let isTimerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-play-btn');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        btn.textContent = '▶️';
+      } else {
+        isTimerRunning = true;
+        btn.textContent = '⏸️';
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+          const s = String(timerSeconds % 60).padStart(2, '0');
+          document.getElementById('timer-display').textContent = `${m}:${s}`;
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = 0;
+      document.getElementById('timer-display').textContent = '00:00';
+      document.getElementById('timer-play-btn').textContent = '▶️';
+    }
+
+    function toggleOnAir() {
+      isOnAir = !isOnAir;
+      const btn = document.getElementById('on-air-btn');
+      const dot = document.getElementById('on-air-dot');
+      const text = document.getElementById('on-air-text');
+
+      if (isOnAir) {
+        btn.className = 'px-3.5 py-1.5 rounded-xl font-extrabold text-xs tracking-wider uppercase border-2 border-red-400 bg-red-600 text-white shadow-lg on-air-active flex items-center gap-2 cursor-pointer';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-white';
+        text.textContent = 'EN EL AIRE';
+        if (!isTimerRunning) toggleTimer();
+        showToast('Piloto EN EL AIRE activado');
+      } else {
+        btn.className = 'px-3.5 py-1.5 rounded-xl font-extrabold text-xs tracking-wider uppercase border-2 border-slate-500 theme-card transition-all flex items-center gap-2 shadow cursor-pointer';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+        text.textContent = 'FUERA DEL AIRE';
+        if (isTimerRunning) toggleTimer();
+      }
+    }
+
+    function switchTab(tabName) {
+      ['cabina', 'repos', 'guide'].forEach(name => {
+        document.getElementById(`view-${name}`).classList.toggle('hidden', name !== tabName);
+        const btn = document.getElementById(`tab-${name}`);
+        if (name === tabName) {
+          btn.className = 'tab-btn px-3 py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow';
+        } else {
+          btn.className = 'tab-btn px-3 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer';
+        }
+      });
+    }
+
+    const CHECKLIST_ITEMS = [
+      'Encender la regleta principal y comprobar que la mesa de mezclas recibe corriente.',
+      'Conectar el cable USB de la mesa al ordenador y verificar entrada/salida de audio.',
+      'Colocar los auriculares al alumnado y bajar a cero los altavoces externos de la sala.',
+      'Subir los deslizadores (faders) de los micrófonos activos y hacer prueba de voz.',
+      'Cargar las canciones/efectos en los 6 Cajones de la Cabina y probar su volumen.',
+      'Abrir Audacity, pulsar REC (R) y activar el piloto "EN EL AIRE" antes de comenzar.'
+    ];
+
+    function renderChecklist() {
+      const container = document.getElementById('checklist-container');
+      container.innerHTML = CHECKLIST_ITEMS.map((item, idx) => `
+        <label class="flex items-start gap-3 p-3 rounded-xl border theme-card cursor-pointer hover:opacity-90 transition">
+          <input type="checkbox" onchange="updateChecklistProgress()" class="chk-step mt-1 w-4 h-4 accent-amber-500 rounded cursor-pointer" />
+          <span class="text-sm font-medium">${idx + 1}. ${item}</span>
+        </label>
+      `).join('');
+      updateChecklistProgress();
+    }
+
+    function updateChecklistProgress() {
+      const all = document.querySelectorAll('.chk-step');
+      const checked = document.querySelectorAll('.chk-step:checked');
+      document.getElementById('checklist-progress').textContent = `${checked.length} / ${all.length} listos`;
+    }
+
+    function resetChecklist() {
+      document.querySelectorAll('.chk-step').forEach(c => c.checked = false);
+      updateChecklistProgress();
+    }
+
+    function updateFileName() {
+      const stage = document.getElementById('file-stage').value;
+      const rawTopic = document.getElementById('file-topic').value.trim() || 'Programa';
+      const cleanTopic = rawTopic.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9-_]/g, '-');
+      const today = new Date().toISOString().slice(0, 10);
+      document.getElementById('generated-filename').textContent = `${today}_${stage}_AdGemellas_${cleanTopic}.mp3`;
+    }
+
+    function copyFilename() {
+      const text = document.getElementById('generated-filename').textContent;
+      const temp = document.createElement('input');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showToast('Nombre copiado: ' + text);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'bg-slate-900/95 border border-amber-500/60 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xl transition-all duration-300';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const box = document.getElementById('teleprompter-box');
+      if (box) {
+        box.addEventListener('scroll', () => {
+          if (!isPrompterScrolling) {
+            exactScrollPos = box.scrollTop;
+          }
+        }, { passive: true });
+      }
+    });
+
+    window.onload = function() {
+      renderSixSlots();
+      renderCabinaSfxGrid('all');
+      loadTemplate('primaria');
+      renderChecklist();
+      updateFileName();
+      updateSpeedLabel();
+      updatePrompterFont();
+    };
+  </script>
+</body>
+</html>

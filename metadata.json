@@ -1,0 +1,6 @@
+{
+  "name": "Estudio Radio Ad-Gemellas",
+  "description": "Estudio de radio escolar accesible DUA con teleprompter, 6 cajones de audio y efectos sintetizados para el CEIP San José (Palenciana).",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
