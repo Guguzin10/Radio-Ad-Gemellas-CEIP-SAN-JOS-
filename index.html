@@ -166,6 +166,16 @@
       padding: 0.5rem 0.75rem;
     }
 
+    /* Pestañas móviles/tablet en Cabina (< 1024px) */
+    @media (max-width: 1023px) {
+      #view-cabina[data-mobile-cabina-tab="teleprompter"] #cabina-console-col {
+        display: none;
+      }
+      #view-cabina[data-mobile-cabina-tab="console"] #cabina-teleprompter-col {
+        display: none;
+      }
+    }
+
     /* Scrollbar discreta */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); }
@@ -173,90 +183,92 @@
     ::-webkit-scrollbar-thumb:hover { background: #64748b; }
   </style>
 </head>
-<body class="min-h-screen md:h-screen md:overflow-hidden flex flex-col">
+<body class="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col overflow-x-hidden">
 
   <!-- ==================== 1. BARRA GLOBAL DE ACCESIBILIDAD DUA ==================== -->
-  <div class="theme-panel border-b px-3 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 no-print" role="region" aria-label="Herramientas de Accesibilidad DUA">
+  <div class="theme-panel border-b px-2.5 sm:px-3 py-1.5 text-xs flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 shrink-0 no-print" role="region" aria-label="Herramientas de Accesibilidad DUA">
     <div class="flex items-center gap-2 font-bold">
-      <span class="px-2 py-0.5 rounded theme-accent-bg uppercase tracking-wider">DUA · Inclusión</span>
+      <span class="px-2 py-0.5 rounded theme-accent-bg uppercase tracking-wider text-[10px] sm:text-xs">DUA · Inclusión</span>
       <span class="hidden xl:inline theme-muted">Adapta el entorno visual y lector para todo el alumnado:</span>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+    <div class="flex flex-wrap items-center gap-1.5 sm:gap-3">
       <!-- 4 Temas Visuales -->
       <div class="flex items-center gap-1" role="group" aria-label="Selector de contraste visual">
-        <span class="theme-muted font-semibold mr-0.5">Tema:</span>
-        <button onclick="setTheme('dark')" id="theme-btn-dark" class="px-2 py-0.5 rounded border border-slate-600 bg-slate-900 text-white font-semibold cursor-pointer">Oscuro</button>
-        <button onclick="setTheme('high-contrast')" id="theme-btn-high-contrast" class="px-2 py-0.5 rounded border border-yellow-400 bg-black text-yellow-300 font-bold cursor-pointer">Alto</button>
-        <button onclick="setTheme('sepia')" id="theme-btn-sepia" class="px-2 py-0.5 rounded border border-amber-700 bg-[#f4ecd8] text-[#2c2216] font-semibold cursor-pointer">Sepia</button>
-        <button onclick="setTheme('light')" id="theme-btn-light" class="px-2 py-0.5 rounded border border-slate-400 bg-white text-slate-900 font-semibold cursor-pointer">Claro</button>
+        <span class="hidden sm:inline theme-muted font-semibold mr-0.5">Tema:</span>
+        <button onclick="setTheme('dark')" id="theme-btn-dark" class="px-2 py-1 sm:py-0.5 rounded border border-slate-600 bg-slate-900 text-white font-semibold cursor-pointer text-[11px] sm:text-xs">Oscuro</button>
+        <button onclick="setTheme('high-contrast')" id="theme-btn-high-contrast" class="px-2 py-1 sm:py-0.5 rounded border border-yellow-400 bg-black text-yellow-300 font-bold cursor-pointer text-[11px] sm:text-xs">Alto</button>
+        <button onclick="setTheme('sepia')" id="theme-btn-sepia" class="px-2 py-1 sm:py-0.5 rounded border border-amber-700 bg-[#f4ecd8] text-[#2c2216] font-semibold cursor-pointer text-[11px] sm:text-xs">Sepia</button>
+        <button onclick="setTheme('light')" id="theme-btn-light" class="px-2 py-1 sm:py-0.5 rounded border border-slate-400 bg-white text-slate-900 font-semibold cursor-pointer text-[11px] sm:text-xs">Claro</button>
       </div>
 
       <!-- Lectura Fácil / Dislexia -->
-      <button onclick="toggleDyslexia()" id="btn-dyslexia" aria-pressed="false" class="px-2 py-0.5 rounded border theme-card font-semibold hover:opacity-90 flex items-center gap-1 cursor-pointer">
-        <span>👁️ Lectura Fácil / Dislexia:</span>
+      <button onclick="toggleDyslexia()" id="btn-dyslexia" aria-pressed="false" class="px-2 py-1 sm:py-0.5 rounded border theme-card font-semibold hover:opacity-90 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs">
+        <span class="hidden sm:inline">👁️ Lectura Fácil / Dislexia:</span>
+        <span class="sm:hidden">👁️ Dislexia:</span>
         <span id="dyslexia-state" class="font-extrabold">OFF</span>
       </button>
 
       <!-- Modo Cabina Simplificada para Alumnado -->
-      <button onclick="toggleSimpleMode()" id="btn-simple-mode" aria-pressed="false" title="Oculta ajustes técnicos avanzados para evitar pulsaciones accidentales en directo" class="px-2 py-0.5 rounded border theme-card font-semibold hover:border-amber-500 flex items-center gap-1 cursor-pointer">
-        <span>🛡️ Modo Alumno:</span>
+      <button onclick="toggleSimpleMode()" id="btn-simple-mode" aria-pressed="false" title="Oculta ajustes técnicos avanzados para evitar pulsaciones accidentales en directo" class="px-2 py-1 sm:py-0.5 rounded border theme-card font-semibold hover:border-amber-500 flex items-center gap-1 cursor-pointer text-[11px] sm:text-xs">
+        <span class="hidden sm:inline">🛡️ Modo Alumno:</span>
+        <span class="sm:hidden">🛡️ Alumno:</span>
         <span id="simple-mode-state" class="font-extrabold">OFF</span>
       </button>
 
       <!-- Escalado Global de Texto -->
       <div class="flex items-center gap-1" role="group" aria-label="Tamaño de letra global">
-        <span class="theme-muted font-semibold">Letra:</span>
-        <button onclick="changeGlobalScale(-0.1)" class="px-2 py-0.5 rounded border theme-card font-bold cursor-pointer" aria-label="Reducir texto">A-</button>
-        <button onclick="resetGlobalScale()" class="px-2 py-0.5 rounded border theme-card font-semibold cursor-pointer" aria-label="Restablecer texto">100%</button>
-        <button onclick="changeGlobalScale(0.1)" class="px-2 py-0.5 rounded border theme-card font-bold cursor-pointer" aria-label="Aumentar texto">A+</button>
+        <span class="hidden sm:inline theme-muted font-semibold">Letra:</span>
+        <button onclick="changeGlobalScale(-0.1)" class="px-2 py-1 sm:py-0.5 rounded border theme-card font-bold cursor-pointer text-[11px] sm:text-xs" aria-label="Reducir texto">A-</button>
+        <button onclick="resetGlobalScale()" class="px-2 py-1 sm:py-0.5 rounded border theme-card font-semibold cursor-pointer text-[11px] sm:text-xs" aria-label="Restablecer texto">100%</button>
+        <button onclick="changeGlobalScale(0.1)" class="px-2 py-1 sm:py-0.5 rounded border theme-card font-bold cursor-pointer text-[11px] sm:text-xs" aria-label="Aumentar texto">A+</button>
       </div>
     </div>
   </div>
 
   <!-- ==================== 2. CABECERA COMPACTA DE ESTUDIO ==================== -->
-  <header class="theme-panel border-b px-3 sm:px-4 py-2 shadow-sm shrink-0 z-30 no-print">
+  <header class="theme-panel border-b px-2.5 sm:px-4 py-2 shadow-sm shrink-0 z-30 no-print">
     <div class="max-w-[1800px] mx-auto flex flex-wrap xl:flex-nowrap items-center justify-between gap-2">
       
       <!-- Identidad y Navegación integrada -->
-      <div class="flex flex-wrap items-center gap-2 min-w-0">
-        <div class="flex items-center gap-2 shrink-0">
-          <div class="w-9 h-9 rounded-xl theme-accent-bg flex items-center justify-center font-extrabold text-lg shadow shrink-0">
+      <div class="flex flex-wrap items-center gap-2 min-w-0 max-w-full">
+        <div class="flex items-center gap-2 shrink-0 min-w-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl theme-accent-bg flex items-center justify-center font-extrabold text-base sm:text-lg shadow shrink-0">
             🎙️
           </div>
-          <div>
+          <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <h1 class="text-base font-extrabold tracking-tight leading-none whitespace-nowrap">RADIO AD-GEMELLAS</h1>
+              <h1 class="text-sm sm:text-base font-extrabold tracking-tight leading-none whitespace-nowrap">RADIO AD-GEMELLAS</h1>
               <span class="text-[10px] px-2 py-0.5 rounded-full border font-bold hidden 2xl:inline whitespace-nowrap">CEIP San José · Palenciana</span>
             </div>
-            <p id="header-mode-subtitle" class="text-[11px] theme-muted leading-tight mt-0.5 whitespace-nowrap">Modo Grabación Directa · Cabina Todo en Uno (.wav)</p>
+            <p id="header-mode-subtitle" class="text-[11px] theme-muted leading-tight mt-0.5 truncate max-w-[220px] sm:max-w-none">Modo Grabación Directa · Cabina Todo en Uno (.wav)</p>
           </div>
         </div>
 
         <!-- Pestañas -->
         <nav class="flex flex-wrap gap-1.5 ml-0 xl:ml-2" aria-label="Navegación principal">
-          <button onclick="switchTab('cabina')" id="tab-cabina" class="tab-btn px-2.5 py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow">
-            🎙️ Cabina en Directo
+          <button onclick="switchTab('cabina')" id="tab-cabina" class="tab-btn px-2.5 py-2 sm:py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow">
+            <span>🎙️</span><span class="hidden sm:inline">Cabina en Directo</span><span class="sm:hidden">Cabina</span>
           </button>
-          <button onclick="switchTab('repos')" id="tab-repos" class="tab-btn teacher-only px-2.5 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            🌐 Repositorios Libres de Derechos
+          <button onclick="switchTab('repos')" id="tab-repos" class="tab-btn teacher-only px-2.5 py-2 sm:py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🌐</span><span class="hidden sm:inline">Repositorios Libres de Derechos</span><span class="sm:hidden">Repositorios</span>
           </button>
-          <button onclick="switchTab('guide')" id="tab-guide" class="tab-btn teacher-only px-2.5 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
-            🎚️ Guía Audacity, Checklist y Archivo
+          <button onclick="switchTab('guide')" id="tab-guide" class="tab-btn teacher-only px-2.5 py-2 sm:py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+            <span>🎚️</span><span class="hidden sm:inline">Guía Audacity, Checklist y Archivo</span><span class="sm:hidden">Guía y Checklist</span>
           </button>
         </nav>
       </div>
 
       <!-- Cronómetro y Piloto EN EL AIRE -->
-      <div class="flex items-center gap-2 shrink-0">
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap">
         <div class="theme-card border px-2 py-1 rounded-xl flex items-center gap-1.5">
-          <span class="text-[11px] theme-muted uppercase font-bold">Tiempo:</span>
-          <span id="timer-display" class="font-mono text-sm font-extrabold">00:00</span>
-          <button onclick="toggleTimer()" id="timer-play-btn" title="Iniciar / Pausar cronómetro" aria-label="Iniciar o pausar cronómetro" class="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">▶️</button>
-          <button onclick="resetTimer()" title="Reiniciar cronómetro" aria-label="Reiniciar cronómetro" class="px-2 py-0.5 rounded border theme-panel text-xs font-bold hover:opacity-80 cursor-pointer">↺</button>
+          <span class="hidden sm:inline text-[11px] theme-muted uppercase font-bold">Tiempo:</span>
+          <span id="timer-display" class="font-mono text-xs sm:text-sm font-extrabold">00:00</span>
+          <button onclick="toggleTimer()" id="timer-play-btn" title="Iniciar / Pausar cronómetro" aria-label="Iniciar o pausar cronómetro" class="px-2 py-1 sm:py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">▶️</button>
+          <button onclick="resetTimer()" title="Reiniciar cronómetro" aria-label="Reiniciar cronómetro" class="px-2 py-1 sm:py-0.5 rounded border theme-panel text-xs font-bold hover:opacity-80 cursor-pointer">↺</button>
         </div>
 
-        <button id="on-air-btn" onclick="toggleOnAir()" class="px-3 py-1.5 rounded-xl font-extrabold text-xs tracking-wider uppercase border-2 border-slate-500 theme-card transition-all flex items-center gap-2 shadow cursor-pointer whitespace-nowrap">
+        <button id="on-air-btn" onclick="toggleOnAir()" class="px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-xl font-extrabold text-[11px] sm:text-xs tracking-wider uppercase border-2 border-slate-500 theme-card transition-all flex items-center gap-1.5 sm:gap-2 shadow cursor-pointer whitespace-nowrap">
           <span id="on-air-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
           <span id="on-air-text">FUERA DEL AIRE</span>
         </button>
@@ -268,29 +280,164 @@
   <div id="toast-container" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none" aria-live="polite"></div>
 
   <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
-  <main class="flex-1 max-w-[1800px] w-full mx-auto p-3 flex flex-col min-h-0">
+  <main class="flex-1 max-w-[1800px] w-full mx-auto p-2 sm:p-3 flex flex-col min-h-0">
 
     <!-- ====================================================================== -->
     <!-- VISTA 1: CABINA TODO EN UNO (IZQUIERDA TELEPROMPTER | DERECHA PISTAS)   -->
     <!-- ====================================================================== -->
-    <section id="view-cabina" class="flex-1 flex flex-col gap-3 min-h-0">
+    <section id="view-cabina" data-mobile-cabina-tab="all" class="flex-1 flex flex-col gap-2.5 sm:gap-3 min-h-0">
 
       <!-- BARRA INTEGRADORA DE AUTOCONFIGURACIÓN, GRABACIÓN DIRECTA, MICRÓFONO(S) Y EFECTOS DE VOZ -->
-      <div class="theme-panel border-2 rounded-2xl px-3.5 py-2 flex flex-col gap-2 shrink-0 shadow-sm" role="region" aria-label="Autoconfiguración de estudio, grabadora directa del programa, control de micrófonos y efectos de voz">
-        <!-- Fila 0: Autoconfiguración de Conexión (Directa desde la App vs Mesa de Mezclas + Audacity) -->
-        <div id="studio-autoconfig-bar" class="teacher-only flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-700/40 text-xs">
-          <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Autoconfiguración del modo de estudio">
-            <span class="text-[11px] font-extrabold text-amber-400 whitespace-nowrap">⚡ Autoconfiguración:</span>
-            <button type="button" id="btn-mode-direct" onclick="setStudioMode('direct')" aria-pressed="true" class="px-2.5 py-1 rounded-lg theme-accent-bg font-extrabold text-[11px] shadow cursor-pointer whitespace-nowrap flex items-center gap-1 transition">
-              <span>🎙️</span> <span>Grabación Directa (App)</span>
+      <div class="theme-panel border-2 rounded-2xl px-2.5 sm:px-3.5 py-2 flex flex-col gap-2 shrink-0 shadow-sm" role="region" aria-label="Autoconfiguración de estudio, grabadora directa del programa, control de micrófonos y efectos de voz">
+        <!-- Fila 1 (Siempre visible en todos los dispositivos): Grabadora Directa + botón desplegable en móvil -->
+        <div id="direct-recorder-row" class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm" aria-hidden="true">🎙️</span>
+              <span class="text-xs font-extrabold tracking-tight">Grabadora Directa <span class="hidden sm:inline">(Sin Audacity)</span></span>
+            </div>
+            <span id="rec-status-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-lg theme-card border font-mono tabular-nums">
+              Listo · <span id="rec-timer">00:00</span>
+            </span>
+            <label class="flex items-center gap-1.5 text-[11px] font-bold cursor-pointer select-none px-2 py-1.5 sm:py-1 rounded-lg theme-card border hover:border-amber-500 transition">
+              <input id="rec-include-mic" type="checkbox" checked onchange="onIncludeMicToggle()" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" />
+              <span>🎤 <span class="hidden sm:inline">Incluir Micrófono</span><span class="sm:hidden">Micro</span></span>
+            </label>
+            <span id="mic-armed-badge" class="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-lg theme-card border theme-muted whitespace-nowrap">
+              Micro preparado al pulsar
+            </span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end">
+            <button onclick="runQuickMicCheck()" id="btn-mic-check" class="px-2.5 py-2 sm:py-1.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-extrabold text-xs shadow transition flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0" title="Graba 4 segundos de prueba y comprueba el volumen del micrófono">
+              <span>🩺</span>
+              <span>Prueba 5s</span>
             </button>
-            <button type="button" id="btn-mode-mixer" onclick="setStudioMode('mixer-audacity')" aria-pressed="false" class="px-2.5 py-1 rounded-lg border theme-card hover:border-amber-500 font-bold text-[11px] cursor-pointer whitespace-nowrap flex items-center gap-1 transition">
-              <span>🎚️</span> <span>Mesa de Mezclas + Audacity</span>
+
+            <button onclick="toggleProgramRecording()" id="btn-rec-toggle" class="simple-big-btn px-3 py-2 sm:py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0">
+              <span>🔴</span>
+              <span>Grabar Programa</span>
+            </button>
+
+            <button onclick="toggleRecordingPause()" id="btn-rec-pause" disabled class="hidden px-2.5 py-2 sm:py-1.5 rounded-xl border theme-card hover:border-amber-500 disabled:opacity-40 font-extrabold text-xs transition flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0">
+              <span>⏸️</span>
+              <span>Pausar</span>
+            </button>
+
+            <audio id="rec-preview-audio" controls class="hidden h-9 sm:h-8 w-full sm:w-auto sm:max-w-[220px]" aria-label="Preescucha del programa grabado"></audio>
+
+            <button onclick="downloadProgramRecording()" id="btn-rec-download" disabled class="simple-big-btn px-3 py-2 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-35 font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0">
+              <span>⬇️</span>
+              <span class="hidden sm:inline">Descargar Programa (.wav)</span>
+              <span class="sm:hidden">Bajar .wav</span>
+            </button>
+
+            <button type="button" id="btn-mobile-studio-extras" onclick="toggleMobileStudioExtras()" aria-expanded="false" class="md:hidden px-2.5 py-2 rounded-xl border theme-card hover:border-amber-500 font-extrabold text-xs transition flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0">
+              <span>⚙️</span>
+              <span id="mobile-extras-label">Ajustes Micro</span>
             </button>
           </div>
-          <span id="studio-mode-summary" class="text-[11px] theme-muted font-semibold">
-            Micros y cabina mezclados y grabados directamente en .wav
-          </span>
+        </div>
+
+        <!-- En móviles (< 768px) este bloque se puede desplegar/plegar para dejar espacio inmediato al teleprompter y consola -->
+        <div id="mobile-studio-extras" class="hidden md:flex flex-col gap-2">
+          <!-- Fila 0: Autoconfiguración de Conexión (Directa desde la App vs Mesa de Mezclas + Audacity) -->
+          <div id="studio-autoconfig-bar" class="teacher-only flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-slate-700/40 text-xs">
+            <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Autoconfiguración del modo de estudio">
+              <span class="text-[11px] font-extrabold text-amber-400 whitespace-nowrap">⚡ Autoconfiguración:</span>
+              <button type="button" id="btn-mode-direct" onclick="setStudioMode('direct')" aria-pressed="true" class="px-2.5 py-1.5 sm:py-1 rounded-lg theme-accent-bg font-extrabold text-[11px] shadow cursor-pointer whitespace-nowrap flex items-center gap-1 transition">
+                <span>🎙️</span> <span>Grabación Directa (App)</span>
+              </button>
+              <button type="button" id="btn-mode-mixer" onclick="setStudioMode('mixer-audacity')" aria-pressed="false" class="px-2.5 py-1.5 sm:py-1 rounded-lg border theme-card hover:border-amber-500 font-bold text-[11px] cursor-pointer whitespace-nowrap flex items-center gap-1 transition">
+                <span>🎚️</span> <span>Mesa de Mezclas + Audacity</span>
+              </button>
+            </div>
+            <span id="studio-mode-summary" class="text-[11px] theme-muted font-semibold">
+              Micros y cabina mezclados y grabados directamente en .wav
+            </span>
+          </div>
+
+          <!-- Fila 2: Selector de Micrófono(s), Volumen de Entrada con VU, Auto-Ducking y Efectos de Voz -->
+          <div id="mic-controls-row" class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-slate-700/40 text-xs">
+            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <div class="teacher-only flex items-center gap-1.5 max-w-full">
+                <label for="mic-device-select" class="text-[11px] font-bold theme-muted whitespace-nowrap">🎛️ Micro/s:</label>
+                <select id="mic-device-select" onchange="onMicDeviceChange()" aria-label="Seleccionar micrófono o todos los micrófonos" class="theme-card border rounded-lg px-2 py-1.5 sm:py-1 text-[11px] font-bold max-w-[180px] sm:max-w-[210px] cursor-pointer">
+                  <option value="all">Todos los micros (Auto)</option>
+                </select>
+                <button id="btn-refresh-mics" onclick="refreshMicDevices(true)" title="Detectar y activar micrófonos conectados" aria-label="Detectar y activar micrófonos conectados" class="px-2 py-1.5 sm:py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer">
+                  🔄
+                </button>
+              </div>
+
+              <div class="theme-card border rounded-lg px-2 py-1 flex items-center gap-1.5 flex-1 sm:flex-initial">
+                <label for="mic-gain-slider" class="text-[11px] font-bold whitespace-nowrap">🔊 Vol. Micro:</label>
+                <input id="mic-gain-slider" type="range" min="0" max="4" step="0.05" value="1" oninput="updateMicInputVolume(this.value, true)" aria-label="Volumen de entrada del micrófono" class="flex-1 sm:w-24 accent-amber-500 cursor-pointer" />
+                <span id="mic-gain-val" class="text-[11px] font-mono font-bold w-10 text-right tabular-nums">100%</span>
+                <div class="w-14 h-2.5 rounded-full theme-panel border overflow-hidden shrink-0" title="Nivel de entrada del micrófono en tiempo real">
+                  <div id="mic-vu-bar" class="h-full w-0 bg-emerald-500 transition-[width] duration-75"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <button id="btn-mic-clean-mode" onclick="toggleMicCleanMode()" aria-pressed="true" title="Captura Estudio desactiva filtros telefónicos que distorsionan la voz; cámbialo a Anti-Eco si grabas sin auriculares cerca de altavoces" class="teacher-only px-2.5 py-1.5 sm:py-1 rounded-lg bg-sky-600/20 text-sky-300 border border-sky-500/60 font-extrabold text-[11px] cursor-pointer whitespace-nowrap">
+                ✨ Captura: Estudio
+              </button>
+
+              <button id="btn-auto-duck" onclick="toggleAutoDucking()" aria-pressed="true" title="Baja suavemente la música al 22% cuando detecta voz en el micrófono" class="px-2.5 py-1.5 sm:py-1 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/60 font-extrabold text-[11px] cursor-pointer whitespace-nowrap">
+                🔉 Auto-Atenuar: ON
+              </button>
+
+              <div class="flex items-center gap-1.5">
+                <label for="voice-effect-select" class="text-[11px] font-bold theme-muted whitespace-nowrap">🎭 Efecto Voz:</label>
+                <select id="voice-effect-select" onchange="setVoiceEffect(this.value, true)" aria-label="Seleccionar efecto de voz para el micrófono" class="theme-card border rounded-lg px-2 py-1.5 sm:py-1 text-[11px] font-bold cursor-pointer">
+                  <option value="natural">🎙️ Voz Natural (Estudio)</option>
+                  <option value="radio-fm">📻 Locutor Radio FM</option>
+                  <option value="megafono">📢 Megáfono / Reportero</option>
+                  <option value="eco">🏟️ Eco / Estadio</option>
+                  <option value="reverb">🏛️ Reverb (Sala / Catedral)</option>
+                  <option value="robot">🤖 Robot / Sci-Fi</option>
+                  <option value="ardilla">🐿️ Voz Aguda (Duende)</option>
+                  <option value="grave">👹 Voz Grave (Gigante)</option>
+                </select>
+              </div>
+
+              <button id="btn-mic-monitor" onclick="toggleMicMonitor()" title="Escuchar tu voz con efecto (úsalo solo con auriculares para evitar acople)" class="teacher-only px-2.5 py-1.5 sm:py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
+                🎧 Monitor: OFF
+              </button>
+            </div>
+          </div>
+
+          <!-- Fila 3 (Condicional): Ajustes finos de Reverb (Tamaño de Sala y Profundidad) -->
+          <div id="reverb-controls-panel" class="hidden flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-amber-500/30 text-xs" role="group" aria-label="Ajustes de Reverb para la voz">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[11px] font-extrabold text-amber-400 whitespace-nowrap">🏛️ Espacio Reverb:</span>
+              <button type="button" id="btn-rev-preset-small" onclick="applyReverbPreset('small-room')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
+                🏠 Habitación Pequeña
+              </button>
+              <button type="button" id="btn-rev-preset-auditorium" onclick="applyReverbPreset('auditorium')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
+                🎭 Auditorio
+              </button>
+              <button type="button" id="btn-rev-preset-cathedral" onclick="applyReverbPreset('cathedral')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
+                ⛪ Catedral
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="theme-card border rounded-lg px-2.5 py-1 flex items-center gap-2">
+                <label for="reverb-room-slider" class="text-[11px] font-bold whitespace-nowrap">📐 Tamaño Sala:</label>
+                <input id="reverb-room-slider" type="range" min="0.4" max="5.5" step="0.1" value="2.4" oninput="updateReverbRoomSize(this.value, false, false)" onchange="updateReverbRoomSize(this.value, true, true)" aria-label="Tamaño de sala del reverb" class="w-24 sm:w-28 accent-amber-500 cursor-pointer" />
+                <span id="reverb-room-val" class="text-[11px] font-mono font-extrabold w-10 text-right tabular-nums">2.4s</span>
+              </div>
+
+              <div class="theme-card border rounded-lg px-2.5 py-1 flex items-center gap-2">
+                <label for="reverb-depth-slider" class="text-[11px] font-bold whitespace-nowrap">🌊 Profundidad:</label>
+                <input id="reverb-depth-slider" type="range" min="0" max="1" step="0.05" value="0.45" oninput="updateReverbDepth(this.value, false)" onchange="updateReverbDepth(this.value, true)" aria-label="Profundidad del reverb" class="w-24 sm:w-28 accent-amber-500 cursor-pointer" />
+                <span id="reverb-depth-val" class="text-[11px] font-mono font-extrabold w-9 text-right tabular-nums">45%</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Banner informativo cuando se elige Mesa de Mezclas + Audacity -->
@@ -301,142 +448,33 @@
               <strong>Modo Mesa de Mezclas + Audacity activo:</strong> los micrófonos del ordenador están silenciados para evitar acoples. Reproduce aquí Sintonía, Cajones y Efectos, y pulsa Grabar (R) en Audacity.
             </p>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
             <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg theme-card border text-sky-300 whitespace-nowrap">🔊 Salida limpia hacia Mesa USB</span>
             <button type="button" onclick="switchTab('guide')" class="teacher-only px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-[11px] cursor-pointer whitespace-nowrap shadow">
               ✅ Ver Checklist Audacity
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Fila 1: Controles principales de grabación -->
-        <div id="direct-recorder-row" class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex flex-wrap items-center gap-2">
-            <div class="flex items-center gap-1.5">
-              <span class="text-sm" aria-hidden="true">🎙️</span>
-              <span class="text-xs font-extrabold tracking-tight">Grabadora Directa (Sin Audacity)</span>
-            </div>
-            <span id="rec-status-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-lg theme-card border font-mono tabular-nums">
-              Listo · <span id="rec-timer">00:00</span>
-            </span>
-            <label class="flex items-center gap-1.5 text-[11px] font-bold cursor-pointer select-none px-2 py-1 rounded-lg theme-card border hover:border-amber-500 transition">
-              <input id="rec-include-mic" type="checkbox" checked onchange="onIncludeMicToggle()" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" />
-              <span>🎤 Incluir Micrófono</span>
-            </label>
-            <span id="mic-armed-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-lg theme-card border theme-muted whitespace-nowrap">
-              Micro preparado al pulsar
-            </span>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <button onclick="runQuickMicCheck()" id="btn-mic-check" class="px-2.5 py-1.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-extrabold text-xs shadow transition flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0" title="Graba 4 segundos de prueba y comprueba el volumen del micrófono">
-              <span>🩺</span>
-              <span>Prueba 5s</span>
-            </button>
-
-            <button onclick="toggleProgramRecording()" id="btn-rec-toggle" class="simple-big-btn px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0">
-              <span>🔴</span>
-              <span>Grabar Programa</span>
-            </button>
-
-            <button onclick="toggleRecordingPause()" id="btn-rec-pause" disabled class="hidden px-2.5 py-1.5 rounded-xl border theme-card hover:border-amber-500 disabled:opacity-40 font-extrabold text-xs transition flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0">
-              <span>⏸️</span>
-              <span>Pausar</span>
-            </button>
-
-            <audio id="rec-preview-audio" controls class="hidden h-8 max-w-[220px]" aria-label="Preescucha del programa grabado"></audio>
-
-            <button onclick="downloadProgramRecording()" id="btn-rec-download" disabled class="simple-big-btn px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-35 font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0">
-              <span>⬇️</span>
-              <span>Descargar Programa (.wav)</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Fila 2: Selector de Micrófono(s), Volumen de Entrada con VU, Auto-Ducking y Efectos de Voz -->
-        <div id="mic-controls-row" class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-slate-700/40 text-xs">
-          <div class="flex flex-wrap items-center gap-2">
-            <div class="teacher-only flex items-center gap-1.5">
-              <label for="mic-device-select" class="text-[11px] font-bold theme-muted whitespace-nowrap">🎛️ Micro/s:</label>
-              <select id="mic-device-select" onchange="onMicDeviceChange()" aria-label="Seleccionar micrófono o todos los micrófonos" class="theme-card border rounded-lg px-2 py-1 text-[11px] font-bold max-w-[210px] cursor-pointer">
-                <option value="all">Todos los micros (Auto)</option>
-              </select>
-              <button id="btn-refresh-mics" onclick="refreshMicDevices(true)" title="Detectar y activar micrófonos conectados" aria-label="Detectar y activar micrófonos conectados" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer">
-                🔄
-              </button>
-            </div>
-
-            <div class="theme-card border rounded-lg px-2 py-1 flex items-center gap-1.5">
-              <label for="mic-gain-slider" class="text-[11px] font-bold whitespace-nowrap">🔊 Vol. Micro:</label>
-              <input id="mic-gain-slider" type="range" min="0" max="2" step="0.05" value="1" oninput="updateMicInputVolume(this.value, true)" aria-label="Volumen de entrada del micrófono" class="w-20 sm:w-24 accent-amber-500 cursor-pointer" />
-              <span id="mic-gain-val" class="text-[11px] font-mono font-bold w-9 text-right tabular-nums">100%</span>
-              <div class="w-14 h-2.5 rounded-full theme-panel border overflow-hidden shrink-0" title="Nivel de entrada del micrófono en tiempo real">
-                <div id="mic-vu-bar" class="h-full w-0 bg-emerald-500 transition-[width] duration-75"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <button id="btn-auto-duck" onclick="toggleAutoDucking()" aria-pressed="true" title="Baja suavemente la música al 22% cuando detecta voz en el micrófono" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/60 font-extrabold text-[11px] cursor-pointer whitespace-nowrap">
-              🔉 Auto-Atenuar: ON
-            </button>
-
-            <div class="flex items-center gap-1.5">
-              <label for="voice-effect-select" class="text-[11px] font-bold theme-muted whitespace-nowrap">🎭 Efecto Voz:</label>
-              <select id="voice-effect-select" onchange="setVoiceEffect(this.value, true)" aria-label="Seleccionar efecto de voz para el micrófono" class="theme-card border rounded-lg px-2 py-1 text-[11px] font-bold cursor-pointer">
-                <option value="natural">🎙️ Voz Natural (Estudio)</option>
-                <option value="radio-fm">📻 Locutor Radio FM</option>
-                <option value="megafono">📢 Megáfono / Reportero</option>
-                <option value="eco">🏟️ Eco / Estadio</option>
-                <option value="reverb">🏛️ Reverb (Sala / Catedral)</option>
-                <option value="robot">🤖 Robot / Sci-Fi</option>
-                <option value="ardilla">🐿️ Voz Aguda (Duende)</option>
-                <option value="grave">👹 Voz Grave (Gigante)</option>
-              </select>
-            </div>
-
-            <button id="btn-mic-monitor" onclick="toggleMicMonitor()" title="Escuchar tu voz con efecto (úsalo solo con auriculares para evitar acople)" class="teacher-only px-2.5 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
-              🎧 Monitor: OFF
-            </button>
-          </div>
-        </div>
-
-        <!-- Fila 3 (Condicional): Ajustes finos de Reverb (Tamaño de Sala y Profundidad) -->
-        <div id="reverb-controls-panel" class="hidden flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-amber-500/30 text-xs" role="group" aria-label="Ajustes de Reverb para la voz">
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span class="text-[11px] font-extrabold text-amber-400 whitespace-nowrap">🏛️ Espacio Reverb:</span>
-            <button type="button" id="btn-rev-preset-small" onclick="applyReverbPreset('small-room')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
-              🏠 Habitación Pequeña
-            </button>
-            <button type="button" id="btn-rev-preset-auditorium" onclick="applyReverbPreset('auditorium')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
-              🎭 Auditorio
-            </button>
-            <button type="button" id="btn-rev-preset-cathedral" onclick="applyReverbPreset('cathedral')" class="px-2 py-1 rounded-lg border theme-card hover:border-amber-500 text-[11px] font-bold cursor-pointer whitespace-nowrap">
-              ⛪ Catedral
-            </button>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <div class="theme-card border rounded-lg px-2.5 py-1 flex items-center gap-2">
-              <label for="reverb-room-slider" class="text-[11px] font-bold whitespace-nowrap">📐 Tamaño Sala:</label>
-              <input id="reverb-room-slider" type="range" min="0.4" max="5.5" step="0.1" value="2.4" oninput="updateReverbRoomSize(this.value, false, false)" onchange="updateReverbRoomSize(this.value, true, true)" aria-label="Tamaño de sala del reverb" class="w-24 sm:w-28 accent-amber-500 cursor-pointer" />
-              <span id="reverb-room-val" class="text-[11px] font-mono font-extrabold w-10 text-right tabular-nums">2.4s</span>
-            </div>
-
-            <div class="theme-card border rounded-lg px-2.5 py-1 flex items-center gap-2">
-              <label for="reverb-depth-slider" class="text-[11px] font-bold whitespace-nowrap">🌊 Profundidad:</label>
-              <input id="reverb-depth-slider" type="range" min="0" max="1" step="0.05" value="0.45" oninput="updateReverbDepth(this.value, false)" onchange="updateReverbDepth(this.value, true)" aria-label="Profundidad del reverb" class="w-24 sm:w-28 accent-amber-500 cursor-pointer" />
-              <span id="reverb-depth-val" class="text-[11px] font-mono font-extrabold w-9 text-right tabular-nums">45%</span>
-            </div>
-          </div>
-        </div>
+      <!-- SELECTOR RÁPIDO PARA MÓVILES Y TABLETS (< 1024px) -->
+      <div id="mobile-cabina-tabs" class="lg:hidden sticky top-1 z-20 theme-panel/95 backdrop-blur border-2 rounded-2xl p-1 grid grid-cols-3 gap-1 shadow-md shrink-0" role="tablist" aria-label="Cambiar vista en móvil o tablet">
+        <button type="button" id="mobile-tab-teleprompter" onclick="setMobileCabinaTab('teleprompter')" role="tab" aria-selected="false" class="py-2 px-2 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1 cursor-pointer theme-card">
+          <span>📖</span><span>Guion</span>
+        </button>
+        <button type="button" id="mobile-tab-console" onclick="setMobileCabinaTab('console')" role="tab" aria-selected="false" class="py-2 px-2 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1 cursor-pointer theme-card">
+          <span>🎛️</span><span>Consola</span>
+        </button>
+        <button type="button" id="mobile-tab-all" onclick="setMobileCabinaTab('all')" role="tab" aria-selected="true" class="py-2 px-2 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1 cursor-pointer theme-accent-bg shadow">
+          <span>🧩</span><span>Todo</span>
+        </button>
       </div>
 
       <!-- PANTALLA DIVIDIDA: TELEPROMPTER DUA (IZQUIERDA) | CONSOLA DE AUDIO (DERECHA) -->
-      <div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-3.5 min-h-0">
+      <div id="cabina-split-grid" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 min-h-0">
       
       <!-- COLUMNA IZQUIERDA (7 de 12 cols): GENERADOR + TELEPROMPTER DUA -->
-      <div class="md:col-span-7 theme-panel border-2 rounded-2xl p-3.5 flex flex-col min-h-[520px] md:h-full overflow-hidden shadow-lg">
+      <div id="cabina-teleprompter-col" class="lg:col-span-7 theme-panel border-2 rounded-2xl p-3 sm:p-3.5 flex flex-col min-h-[430px] sm:min-h-[520px] lg:min-h-0 lg:h-full overflow-hidden shadow-lg">
         
         <!-- 1. Selector de Plantillas por Etapa + Turno de Lectura + Editor/PDF -->
         <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-700/50 shrink-0">
@@ -475,10 +513,10 @@
           <div class="flex flex-wrap items-center justify-between gap-2">
             <input id="script-title" type="text" value="Informativo Escolar: Noticias del CEIP San José (Primaria)" oninput="onScriptTitleInput()" placeholder="Título del programa..." aria-label="Título del programa" class="flex-1 min-w-[200px] theme-panel border rounded-lg px-2.5 py-1 text-xs font-bold" />
             <div class="flex flex-wrap gap-1 text-[11px]">
-              <button onclick="insertScriptTag('[SINTONÍA OFICIAL RADIO AD-GEMELLAS]')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold cursor-pointer">+ Sintonía</button>
+              <button onclick="insertScriptTag('[SINTONÍA DE INICIO]')" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold cursor-pointer">+ Sintonía Inicio</button>
+              <button onclick="insertScriptTag('[SINTONÍA DE CIERRE]')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold cursor-pointer">+ Sintonía Cierre</button>
               <button onclick="insertScriptTag('[EFECTO: CAMBIO NOTICIAS]')" class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono font-bold cursor-pointer">+ Noticias</button>
               <button onclick="insertScriptTag('[EFECTO: APLAUSOS]')" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold cursor-pointer">+ Aplausos</button>
-              <button onclick="insertScriptTag('[EFECTO: MELODÍA CIERRE]')" class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold cursor-pointer">+ Cierre</button>
             </div>
           </div>
           <textarea id="script-editor" rows="5" oninput="onScriptInput()" aria-label="Editor del guion de radio" class="w-full theme-panel border rounded-xl p-2.5 text-xs sm:text-sm leading-relaxed focus:outline-none" placeholder="Escribe o edita el guion aquí..."></textarea>
@@ -542,18 +580,18 @@
         </div>
 
         <!-- 4. Ventana de Lectura del Teleprompter -->
-        <div class="relative flex-1 min-h-[260px] rounded-2xl border-2 border-slate-600 overflow-hidden theme-card">
-          <div id="reading-guide-bar" class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 border-y-2 border-amber-500/80 bg-amber-500/10 z-10 flex items-center justify-between px-3">
-            <span class="text-amber-400 font-extrabold text-xl">▶</span>
-            <span class="text-amber-400 font-extrabold text-xl">◀</span>
+        <div class="relative flex-1 min-h-[280px] sm:min-h-[320px] lg:min-h-[260px] rounded-2xl border-2 border-slate-600 overflow-hidden theme-card">
+          <div id="reading-guide-bar" class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-16 sm:h-24 border-y-2 border-amber-500/80 bg-amber-500/10 z-10 flex items-center justify-between px-2.5 sm:px-3">
+            <span class="text-amber-400 font-extrabold text-lg sm:text-xl">▶</span>
+            <span class="text-amber-400 font-extrabold text-lg sm:text-xl">◀</span>
           </div>
 
-          <div id="teleprompter-box" class="h-full overflow-y-auto px-6 sm:px-10 py-36 space-y-6" style="font-size: 32px;"></div>
+          <div id="teleprompter-box" class="h-full overflow-y-auto px-4 sm:px-8 lg:px-10 py-20 sm:py-28 lg:py-36 space-y-5 sm:space-y-6" style="font-size: 32px;"></div>
         </div>
 
         <!-- 5. Pie de Programa: Atajos DUA + Copia de Seguridad / Restauración (.json) -->
         <div class="pt-2.5 mt-2.5 border-t border-slate-700/50 flex flex-wrap items-center justify-between gap-2 shrink-0 text-xs">
-          <div class="flex flex-wrap items-center gap-1.5 theme-muted text-[11px]">
+          <div class="hidden md:flex flex-wrap items-center gap-1.5 theme-muted text-[11px]">
             <span class="font-bold">⌨️ Atajos:</span>
             <span><kbd class="px-1 py-0.5 rounded border theme-card font-mono font-bold">Espacio</kbd> Leer</span>
             <span><kbd class="px-1 py-0.5 rounded border theme-card font-mono font-bold">↑/↓</kbd> Paso</span>
@@ -565,10 +603,10 @@
           </div>
 
           <div class="teacher-only flex flex-wrap items-center gap-1.5">
-            <button onclick="exportBackupJSON()" id="btn-backup-json" class="px-2.5 py-1.5 rounded-lg border border-amber-500/70 theme-card hover:border-amber-400 font-extrabold text-xs transition flex items-center gap-1.5 cursor-pointer">
+            <button onclick="exportBackupJSON()" id="btn-backup-json" class="px-2.5 py-2 sm:py-1.5 rounded-lg border border-amber-500/70 theme-card hover:border-amber-400 font-extrabold text-xs transition flex items-center gap-1.5 cursor-pointer">
               💾 Guardar Copia de Seguridad (.json)
             </button>
-            <button onclick="triggerRestoreJSON()" id="btn-restore-json" class="px-2.5 py-1.5 rounded-lg bg-sky-700 hover:bg-sky-600 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer">
+            <button onclick="triggerRestoreJSON()" id="btn-restore-json" class="px-2.5 py-2 sm:py-1.5 rounded-lg bg-sky-700 hover:bg-sky-600 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer">
               📂 Restaurar Programa (.json)
             </button>
             <input id="restore-json-input" type="file" accept=".json,application/json" class="hidden" onchange="importBackupJSON(event)" aria-label="Seleccionar archivo de copia de seguridad JSON" />
@@ -577,7 +615,7 @@
       </div>
 
       <!-- COLUMNA DERECHA (5 de 12 cols): 6 CAJONES DE PISTAS + EFECTOS EN VIVO -->
-      <div class="md:col-span-5 theme-panel border-2 rounded-2xl p-3.5 flex flex-col min-h-[520px] md:h-full overflow-hidden shadow-lg">
+      <div id="cabina-console-col" class="lg:col-span-5 theme-panel border-2 rounded-2xl p-3 sm:p-3.5 flex flex-col min-h-[460px] lg:min-h-0 lg:h-full overflow-hidden shadow-lg">
         
         <!-- Cabecera Fija de la Consola Derecha -->
         <div class="pb-2.5 border-b border-slate-700/50 space-y-2 shrink-0">
@@ -600,23 +638,30 @@
             </button>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
-            <button id="btn-sintonia-oficial" onclick="toggleSintoniaOficial(this)" class="simple-big-btn py-2 px-3 rounded-xl theme-accent-bg font-extrabold text-xs shadow hover:opacity-95 transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <div class="grid grid-cols-2 gap-2 items-center">
+            <button id="btn-sintonia-oficial" onclick="toggleSintoniaOficial(this)" title="Reproducir Sintonía de Inicio · Palenciana en el aire (Atajo: tecla S)" class="simple-big-btn py-2 px-2.5 rounded-xl theme-accent-bg font-extrabold text-xs shadow hover:opacity-95 transition flex items-center justify-center gap-1.5 cursor-pointer">
               <span id="sintonia-btn-icon">🎶</span>
-              <span id="sintonia-btn-label">Sintonía Oficial</span>
+              <span id="sintonia-btn-label" class="truncate">Sintonía de Inicio</span>
             </button>
 
+            <button id="btn-sintonia-cierre" onclick="toggleSintoniaCierre(this)" title="Reproducir Sintonía de Cierre · Lights Down on the Dial" class="simple-big-btn py-2 px-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span id="sintonia-cierre-btn-icon">🌙</span>
+              <span id="sintonia-cierre-btn-label" class="truncate">Sintonía de Cierre</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
             <div class="theme-card border rounded-xl px-2.5 py-1.5 flex items-center gap-1.5">
               <label for="master-vol" class="text-[11px] font-bold whitespace-nowrap">🔊 Efectos:</label>
               <input id="master-vol" type="range" min="0" max="1" step="0.05" value="0.85" oninput="updateMasterVolume(this.value, true)" class="w-full accent-amber-500 cursor-pointer" />
               <span id="master-vol-val" class="text-[11px] font-mono font-bold w-8 text-right">85%</span>
             </div>
-          </div>
 
-          <button id="btn-manual-duck" onclick="toggleManualDucking()" aria-pressed="false" class="w-full py-1.5 px-3 rounded-xl border theme-card hover:border-amber-500 font-extrabold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer" title="Atenúa suavemente Sintonía y Cajones al 22% mientras hablas (Atajo: tecla D)">
-            <span>🎙️</span>
-            <span id="manual-duck-label">Bajar Música (Hablar · Tecla D)</span>
-          </button>
+            <button id="btn-manual-duck" onclick="toggleManualDucking()" aria-pressed="false" class="w-full py-1.5 px-3 rounded-xl border theme-card hover:border-amber-500 font-extrabold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer" title="Atenúa suavemente Sintonía y Cajones al 22% mientras hablas (Atajo: tecla D)">
+              <span>🎙️</span>
+              <span id="manual-duck-label">Bajar Música (Hablar · Tecla D)</span>
+            </button>
+          </div>
         </div>
 
         <!-- ZONA CON SCROLL INTERNO PROPIO: 6 CAJONES DE PISTAS + BATERÍA DE EFECTOS -->
@@ -667,11 +712,39 @@
               </select>
             </div>
 
-            <div id="cabina-sfx-grid" class="grid grid-cols-2 gap-2 pb-2"></div>
+            <div id="cabina-sfx-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-2 pb-2"></div>
           </div>
 
         </div>
       </div>
+      </div>
+
+      <!-- BARRA TÁCTIL RÁPIDA FIJA EN MÓVILES Y TABLETS (< 1024px) -->
+      <div id="mobile-quick-dock" class="lg:hidden sticky bottom-1.5 z-30 theme-panel/95 backdrop-blur border-2 border-amber-500/40 rounded-2xl p-1.5 shadow-2xl grid grid-cols-6 gap-1 shrink-0" role="toolbar" aria-label="Controles rápidos en directo para móvil y tablet">
+        <button type="button" id="dock-btn-play" onclick="togglePrompterScroll()" class="py-2 px-1 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">▶️</span>
+          <span>Leer</span>
+        </button>
+        <button type="button" id="dock-btn-sintonia" onclick="toggleSintoniaOficial(this)" class="py-2 px-1 rounded-xl theme-accent-bg font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">🎶</span>
+          <span>Inicio</span>
+        </button>
+        <button type="button" id="dock-btn-sintonia-cierre" onclick="toggleSintoniaCierre(this)" class="py-2 px-1 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">🌙</span>
+          <span>Cierre</span>
+        </button>
+        <button type="button" id="dock-btn-duck" onclick="toggleManualDucking()" class="py-2 px-1 rounded-xl border theme-card font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">🎙️</span>
+          <span>Bajar</span>
+        </button>
+        <button type="button" id="dock-btn-rec" onclick="toggleProgramRecording()" class="py-2 px-1 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">🔴</span>
+          <span>Grabar</span>
+        </button>
+        <button type="button" id="dock-btn-stop" onclick="stopAllSounds()" class="py-2 px-1 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-extrabold text-[10px] sm:text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer">
+          <span class="text-sm">⏹️</span>
+          <span>PARAR</span>
+        </button>
       </div>
     </section>
 
@@ -846,6 +919,17 @@
 
   </main>
 
+  <footer id="app-footer" class="theme-panel border-t px-3 py-1.5 text-[11px] shrink-0 no-print">
+    <div class="max-w-[1800px] mx-auto flex flex-wrap items-center justify-center sm:justify-between gap-x-3 gap-y-1 text-center">
+      <p class="theme-muted font-semibold">
+        Creada por <strong class="font-extrabold" style="color: var(--text-main);">Gustavo Vegas Haro</strong> para el <strong class="font-extrabold" style="color: var(--text-main);">CEIP San José (Palenciana)</strong>
+      </p>
+      <span class="px-2 py-0.5 rounded-md border theme-card font-bold tracking-tight" aria-label="Licencia Creative Commons CC-BY-SA-NC">
+        © Licencia Creative Commons CC-BY-SA-NC
+      </span>
+    </div>
+  </footer>
+
   <!-- ÁREA DE IMPRESIÓN / EXPORTACIÓN PDF -->
   <div id="print-area" class="hidden"></div>
 
@@ -937,8 +1021,21 @@
        2. MOTOR DE AUDIO ESTUDIO, SINTONÍA OFICIAL MP3, 24 EFECTOS REALISTAS Y GRABADORA
        ========================================================================== */
     const SINTONIA_OFICIAL_SRC = '/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3';
+    const SINTONIA_FALLBACK_URLS = [
+      SINTONIA_OFICIAL_SRC,
+      './assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3',
+      'assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3'
+    ];
+    const SINTONIA_CIERRE_SRC = '/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3';
+    const SINTONIA_CIERRE_FALLBACK_URLS = [
+      SINTONIA_CIERRE_SRC,
+      './assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3',
+      'assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3'
+    ];
     let audioCtx = null;
     let studioMasterBus = null;
+    let studioRecordMixBus = null;
+    let programRecordLimiter = null;
     let musicDuckBus = null;
     let sfxBusGain = null;
     let studioReverbNode = null;
@@ -952,6 +1049,22 @@
     let sintoniaAudio = null;
     let sintoniaSource = null;
     let sintoniaGain = null;
+    let sintoniaRawArrayBuffer = null;
+    let sintoniaRawPromise = null;
+    let sintoniaAudioBuffer = null;
+    let sintoniaBufferSource = null;
+    let isSintoniaBufferPlaying = false;
+    let sintoniaPlayToken = 0;
+
+    let sintoniaCierreAudio = null;
+    let sintoniaCierreSource = null;
+    let sintoniaCierreGain = null;
+    let sintoniaCierreRawArrayBuffer = null;
+    let sintoniaCierreRawPromise = null;
+    let sintoniaCierreAudioBuffer = null;
+    let sintoniaCierreBufferSource = null;
+    let isSintoniaCierreBufferPlaying = false;
+    let sintoniaCierrePlayToken = 0;
 
     const activeLoops = {};
     const activeOneShots = {};
@@ -979,6 +1092,20 @@
         studioMasterBus = audioCtx.createGain();
         studioMasterBus.gain.value = 1.0;
 
+        studioRecordMixBus = audioCtx.createGain();
+        studioRecordMixBus.gain.value = 1.0;
+
+        programRecordLimiter = typeof audioCtx.createDynamicsCompressor === 'function'
+          ? audioCtx.createDynamicsCompressor()
+          : audioCtx.createGain();
+        if (programRecordLimiter.threshold) {
+          programRecordLimiter.threshold.setValueAtTime(-1.5, audioCtx.currentTime);
+          programRecordLimiter.knee.setValueAtTime(1.5, audioCtx.currentTime);
+          programRecordLimiter.ratio.setValueAtTime(16, audioCtx.currentTime);
+          programRecordLimiter.attack.setValueAtTime(0.001, audioCtx.currentTime);
+          programRecordLimiter.release.setValueAtTime(0.08, audioCtx.currentTime);
+        }
+
         musicDuckBus = audioCtx.createGain();
         musicDuckBus.gain.value = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
         musicDuckBus.connect(studioMasterBus);
@@ -994,10 +1121,12 @@
 
         sfxBusGain.connect(studioMasterBus);
         studioMasterBus.connect(audioCtx.destination);
+        studioMasterBus.connect(studioRecordMixBus);
+        studioRecordMixBus.connect(programRecordLimiter);
 
         if (typeof audioCtx.createMediaStreamDestination === 'function') {
           recordDestination = audioCtx.createMediaStreamDestination();
-          studioMasterBus.connect(recordDestination);
+          programRecordLimiter.connect(recordDestination);
         }
 
         ensureMicAudioGraph(audioCtx);
@@ -1016,6 +1145,9 @@
       }
       if (sintoniaAudio && !sintoniaSource) {
         sintoniaAudio.volume = getMasterGain() * factor;
+      }
+      if (sintoniaCierreAudio && !sintoniaCierreSource) {
+        sintoniaCierreAudio.volume = getMasterGain() * factor;
       }
       for (let i = 1; i <= 6; i++) {
         const s = audioSlots[i];
@@ -1071,6 +1203,7 @@
     function updateManualDuckUI() {
       const btn = document.getElementById('btn-manual-duck');
       const lbl = document.getElementById('manual-duck-label');
+      const dockBtn = document.getElementById('dock-btn-duck');
       if (btn) {
         btn.setAttribute('aria-pressed', String(isManualDuckActive));
         btn.className = isManualDuckActive
@@ -1081,6 +1214,12 @@
         lbl.textContent = isManualDuckActive
           ? 'Música atenuada al 22% · Pulsa para subir (Tecla D)'
           : 'Bajar Música (Hablar · Tecla D)';
+      }
+      if (dockBtn) {
+        dockBtn.setAttribute('aria-pressed', String(isManualDuckActive));
+        dockBtn.className = isManualDuckActive
+          ? 'py-2 px-1 rounded-xl bg-sky-600 text-white border border-sky-400 font-extrabold text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer shadow'
+          : 'py-2 px-1 rounded-xl border theme-card font-extrabold text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer';
       }
     }
 
@@ -1107,14 +1246,31 @@
       }
       if (sintoniaGain && audioCtx) {
         sintoniaGain.gain.setTargetAtTime(clamped, audioCtx.currentTime, 0.02);
-      } else if (sintoniaAudio) {
-        sintoniaAudio.volume = clamped;
+      }
+      if (sintoniaCierreGain && audioCtx) {
+        sintoniaCierreGain.gain.setTargetAtTime(clamped, audioCtx.currentTime, 0.02);
+      }
+      if (sintoniaAudio && !sintoniaSource) {
+        const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+        sintoniaAudio.volume = clamped * factor;
+      }
+      if (sintoniaCierreAudio && !sintoniaCierreSource) {
+        const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+        sintoniaCierreAudio.volume = clamped * factor;
       }
       if (persist) saveAppState();
     }
 
+    function isSintoniaPlaying() {
+      return Boolean(isSintoniaBufferPlaying || (sintoniaAudio && !sintoniaAudio.paused));
+    }
+
+    function isSintoniaCierrePlaying() {
+      return Boolean(isSintoniaCierreBufferPlaying || (sintoniaCierreAudio && !sintoniaCierreAudio.paused));
+    }
+
     function isAnyStudioAudioActive() {
-      const sintoniaPlaying = Boolean(sintoniaAudio && !sintoniaAudio.paused);
+      const sintoniaPlaying = isSintoniaPlaying() || isSintoniaCierrePlaying();
       const loopActive = Object.keys(activeLoops).length > 0;
       const oneShotActive = Object.keys(activeOneShots).length > 0;
       let slotPlaying = false;
@@ -1153,8 +1309,12 @@
     }
 
     function refreshMixerIdleStatus() {
-      if (sintoniaAudio && !sintoniaAudio.paused) {
-        setMixerVisualStatus('Sintonía Oficial: Palenciana en el aire', 0);
+      if (isSintoniaPlaying()) {
+        setMixerVisualStatus('Sintonía de Inicio: Palenciana en el aire', 0);
+        return;
+      }
+      if (isSintoniaCierrePlaying()) {
+        setMixerVisualStatus('Sintonía de Cierre: Lights Down on the Dial', 0);
         return;
       }
       const activeOneShotId = Object.keys(activeOneShots)[0];
@@ -1178,54 +1338,148 @@
       setMixerVisualStatus(null);
     }
 
-    /* ---------- SINTONÍA OFICIAL (Palenciana en el aire MP3) ---------- */
+    /* ---------- SINTONÍA DE INICIO (Palenciana en el aire MP3) ---------- */
     function updateSintoniaButtonUI(isPlaying) {
       const btn = document.getElementById('btn-sintonia-oficial');
       const icon = document.getElementById('sintonia-btn-icon');
       const lbl = document.getElementById('sintonia-btn-label');
+      const dockBtn = document.getElementById('dock-btn-sintonia');
       if (icon) icon.textContent = isPlaying ? '⏹️' : '🎶';
-      if (lbl) lbl.textContent = isPlaying ? 'Parar Sintonía Oficial' : 'Sintonía Oficial';
+      if (lbl) lbl.textContent = isPlaying ? 'Parar Sintonía de Inicio' : 'Sintonía de Inicio';
       if (btn) btn.classList.toggle('ring-2', isPlaying);
       if (btn) btn.classList.toggle('ring-white', isPlaying);
+      if (dockBtn) {
+        dockBtn.classList.toggle('ring-2', isPlaying);
+        dockBtn.classList.toggle('ring-white', isPlaying);
+        dockBtn.innerHTML = isPlaying
+          ? '<span class="text-sm">⏹️</span><span>Parar</span>'
+          : '<span class="text-sm">🎶</span><span>Inicio</span>';
+      }
+    }
+
+    function prefetchSintoniaBytes() {
+      if (sintoniaRawArrayBuffer) return Promise.resolve(sintoniaRawArrayBuffer);
+      if (sintoniaRawPromise) return sintoniaRawPromise;
+      if (typeof fetch !== 'function') return Promise.resolve(null);
+
+      sintoniaRawPromise = (async () => {
+        for (const candidateUrl of SINTONIA_FALLBACK_URLS) {
+          try {
+            const resp = await fetch(candidateUrl);
+            if (resp && resp.ok) {
+              const buf = await resp.arrayBuffer();
+              if (buf && buf.byteLength > 1024) {
+                sintoniaRawArrayBuffer = buf;
+                return buf;
+              }
+            }
+          } catch (e) {}
+        }
+        return null;
+      })();
+      return sintoniaRawPromise;
+    }
+
+    async function ensureSintoniaDecodedBuffer(ctx) {
+      if (sintoniaAudioBuffer) return sintoniaAudioBuffer;
+      if (!ctx || typeof ctx.decodeAudioData !== 'function') return null;
+      const raw = await prefetchSintoniaBytes();
+      if (!raw) return null;
+      try {
+        sintoniaAudioBuffer = await ctx.decodeAudioData(raw.slice(0));
+        return sintoniaAudioBuffer;
+      } catch (e) {
+        return null;
+      }
     }
 
     function ensureSintoniaAudio() {
       if (!sintoniaAudio) {
         sintoniaAudio = new Audio(SINTONIA_OFICIAL_SRC);
         sintoniaAudio.preload = 'auto';
+        sintoniaAudio._fallbackIdx = 0;
         sintoniaAudio.onplay = () => {
           updateSintoniaButtonUI(true);
-          setMixerVisualStatus('Sintonía Oficial: Palenciana en el aire', 0);
+          setMixerVisualStatus('Sintonía de Inicio: Palenciana en el aire', 0);
         };
         sintoniaAudio.onpause = () => {
-          updateSintoniaButtonUI(false);
-          refreshMixerIdleStatus();
+          if (!isSintoniaBufferPlaying) {
+            updateSintoniaButtonUI(false);
+            refreshMixerIdleStatus();
+          }
         };
         sintoniaAudio.onended = () => {
           updateSintoniaButtonUI(false);
           refreshMixerIdleStatus();
         };
         sintoniaAudio.onerror = () => {
+          const nextIdx = (sintoniaAudio._fallbackIdx || 0) + 1;
+          if (nextIdx < SINTONIA_FALLBACK_URLS.length) {
+            sintoniaAudio._fallbackIdx = nextIdx;
+            sintoniaAudio.src = SINTONIA_FALLBACK_URLS[nextIdx];
+            if (typeof sintoniaAudio.load === 'function') sintoniaAudio.load();
+            return;
+          }
           updateSintoniaButtonUI(false);
-          showToast('No se pudo cargar el audio de Sintonía Oficial');
+          showToast('No se pudo cargar el audio de Sintonía de Inicio');
         };
       }
-
-      try {
-        const ctx = getAudioContext();
-        if (!sintoniaSource && typeof ctx.createMediaElementSource === 'function') {
-          sintoniaSource = ctx.createMediaElementSource(sintoniaAudio);
-          sintoniaGain = ctx.createGain();
-          sintoniaGain.gain.value = getMasterGain();
-          sintoniaSource.connect(sintoniaGain);
-          sintoniaGain.connect(musicDuckBus || studioMasterBus);
-          sintoniaAudio.volume = 1;
-        }
-      } catch (e) {
-        if (sintoniaAudio) sintoniaAudio.volume = getMasterGain() * ((isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0);
-      }
-
+      const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+      sintoniaAudio.volume = getMasterGain() * factor;
       return sintoniaAudio;
+    }
+
+    function playSintoniaViaAudioElement() {
+      const audio = ensureSintoniaAudio();
+      if (audio.readyState >= 1) {
+        try { audio.currentTime = 0; } catch (e) {}
+      }
+      const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+      audio.volume = getMasterGain() * factor;
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          showToast('Pulsa de nuevo para iniciar la Sintonía de Inicio');
+        });
+      }
+    }
+
+    function startSintoniaBufferPlayback(ctx, buffer) {
+      stopSintoniaBufferOnly();
+      if (!sintoniaGain) {
+        sintoniaGain = ctx.createGain();
+        sintoniaGain.connect(musicDuckBus || studioMasterBus);
+      }
+      sintoniaGain.gain.setValueAtTime(getMasterGain(), ctx.currentTime);
+
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.connect(sintoniaGain);
+      sintoniaBufferSource = src;
+      isSintoniaBufferPlaying = true;
+
+      src.onended = () => {
+        if (sintoniaBufferSource === src) {
+          sintoniaBufferSource = null;
+          isSintoniaBufferPlaying = false;
+          updateSintoniaButtonUI(false);
+          refreshMixerIdleStatus();
+        }
+      };
+
+      updateSintoniaButtonUI(true);
+      setMixerVisualStatus('Sintonía de Inicio: Palenciana en el aire', 0);
+      src.start(0);
+    }
+
+    function stopSintoniaBufferOnly() {
+      if (sintoniaBufferSource) {
+        try { sintoniaBufferSource.onended = null; } catch (e) {}
+        try { sintoniaBufferSource.stop(); } catch (e) {}
+        try { sintoniaBufferSource.disconnect(); } catch (e) {}
+        sintoniaBufferSource = null;
+      }
+      isSintoniaBufferPlaying = false;
     }
 
     function toggleSintoniaOficial(btnEl) {
@@ -1233,23 +1487,274 @@
         btnEl.classList.add('pad-active');
         setTimeout(() => btnEl.classList.remove('pad-active'), 240);
       }
-      const audio = ensureSintoniaAudio();
-      if (!audio.paused) {
+      if (isSintoniaPlaying()) {
+        sintoniaPlayToken++;
         stopSintoniaOficial();
-        showToast('Sintonía Oficial detenida');
+        showToast('Sintonía de Inicio detenida');
         return;
       }
-      audio.currentTime = 0;
-      audio.play().catch(() => {
-        showToast('Pulsa de nuevo para iniciar la Sintonía Oficial');
+
+      if (isSintoniaCierrePlaying()) {
+        stopSintoniaCierre();
+      }
+
+      const token = ++sintoniaPlayToken;
+      const ctx = getAudioContext();
+
+      // Si no hay fetch/decodeAudioData (p.ej. entorno de pruebas o file://), reproducir directamente vía <audio>
+      if (typeof fetch !== 'function' || !ctx || typeof ctx.decodeAudioData !== 'function') {
+        playSintoniaViaAudioElement();
+        return;
+      }
+
+      // Si el buffer ya está decodificado y el contexto está listo, reproducir al instante
+      if (sintoniaAudioBuffer && ctx.state === 'running') {
+        startSintoniaBufferPlayback(ctx, sintoniaAudioBuffer);
+        return;
+      }
+
+      // Reanudar AudioContext dentro del gesto de usuario y decodificar/reproducir con fallback automático a <audio>
+      const resumePromise = ctx.state === 'suspended' && typeof ctx.resume === 'function'
+        ? ctx.resume().catch(() => {})
+        : Promise.resolve();
+
+      resumePromise.then(async () => {
+        if (token !== sintoniaPlayToken) return;
+        const decoded = await ensureSintoniaDecodedBuffer(ctx);
+        if (token !== sintoniaPlayToken) return;
+        if (decoded && ctx.state === 'running') {
+          startSintoniaBufferPlayback(ctx, decoded);
+        } else {
+          playSintoniaViaAudioElement();
+        }
+      }).catch(() => {
+        if (token === sintoniaPlayToken) {
+          playSintoniaViaAudioElement();
+        }
       });
     }
 
     function stopSintoniaOficial() {
-      if (!sintoniaAudio) return;
-      sintoniaAudio.pause();
-      sintoniaAudio.currentTime = 0;
+      sintoniaPlayToken++;
+      stopSintoniaBufferOnly();
+      if (sintoniaAudio) {
+        sintoniaAudio.pause();
+        if (sintoniaAudio.readyState >= 1) {
+          try { sintoniaAudio.currentTime = 0; } catch (e) {}
+        }
+      }
       updateSintoniaButtonUI(false);
+      refreshMixerIdleStatus();
+    }
+
+    /* ---------- SINTONÍA DE CIERRE (Lights Down on the Dial MP3) ---------- */
+    function updateSintoniaCierreButtonUI(isPlaying) {
+      const btn = document.getElementById('btn-sintonia-cierre');
+      const icon = document.getElementById('sintonia-cierre-btn-icon');
+      const lbl = document.getElementById('sintonia-cierre-btn-label');
+      const dockBtn = document.getElementById('dock-btn-sintonia-cierre');
+      if (icon) icon.textContent = isPlaying ? '⏹️' : '🌙';
+      if (lbl) lbl.textContent = isPlaying ? 'Parar Sintonía de Cierre' : 'Sintonía de Cierre';
+      if (btn) {
+        btn.className = isPlaying
+          ? 'simple-big-btn py-2 px-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white ring-2 ring-white font-extrabold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer'
+          : 'simple-big-btn py-2 px-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer';
+      }
+      if (dockBtn) {
+        dockBtn.classList.toggle('ring-2', isPlaying);
+        dockBtn.classList.toggle('ring-white', isPlaying);
+        dockBtn.classList.toggle('bg-red-600', isPlaying);
+        dockBtn.classList.toggle('bg-indigo-600', !isPlaying);
+        dockBtn.innerHTML = isPlaying
+          ? '<span class="text-sm">⏹️</span><span>Parar</span>'
+          : '<span class="text-sm">🌙</span><span>Cierre</span>';
+      }
+    }
+
+    function prefetchSintoniaCierreBytes() {
+      if (sintoniaCierreRawArrayBuffer) return Promise.resolve(sintoniaCierreRawArrayBuffer);
+      if (sintoniaCierreRawPromise) return sintoniaCierreRawPromise;
+      if (typeof fetch !== 'function') return Promise.resolve(null);
+
+      sintoniaCierreRawPromise = (async () => {
+        for (const candidateUrl of SINTONIA_CIERRE_FALLBACK_URLS) {
+          try {
+            const resp = await fetch(candidateUrl);
+            if (resp && resp.ok) {
+              const buf = await resp.arrayBuffer();
+              if (buf && buf.byteLength > 1024) {
+                sintoniaCierreRawArrayBuffer = buf;
+                return buf;
+              }
+            }
+          } catch (e) {}
+        }
+        return null;
+      })();
+      return sintoniaCierreRawPromise;
+    }
+
+    async function ensureSintoniaCierreDecodedBuffer(ctx) {
+      if (sintoniaCierreAudioBuffer) return sintoniaCierreAudioBuffer;
+      if (!ctx || typeof ctx.decodeAudioData !== 'function') return null;
+      const raw = await prefetchSintoniaCierreBytes();
+      if (!raw) return null;
+      try {
+        sintoniaCierreAudioBuffer = await ctx.decodeAudioData(raw.slice(0));
+        return sintoniaCierreAudioBuffer;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function ensureSintoniaCierreAudio() {
+      if (!sintoniaCierreAudio) {
+        sintoniaCierreAudio = new Audio(SINTONIA_CIERRE_SRC);
+        sintoniaCierreAudio.preload = 'auto';
+        sintoniaCierreAudio._fallbackIdx = 0;
+        sintoniaCierreAudio.onplay = () => {
+          updateSintoniaCierreButtonUI(true);
+          setMixerVisualStatus('Sintonía de Cierre: Lights Down on the Dial', 0);
+        };
+        sintoniaCierreAudio.onpause = () => {
+          if (!isSintoniaCierreBufferPlaying) {
+            updateSintoniaCierreButtonUI(false);
+            refreshMixerIdleStatus();
+          }
+        };
+        sintoniaCierreAudio.onended = () => {
+          updateSintoniaCierreButtonUI(false);
+          refreshMixerIdleStatus();
+        };
+        sintoniaCierreAudio.onerror = () => {
+          const nextIdx = (sintoniaCierreAudio._fallbackIdx || 0) + 1;
+          if (nextIdx < SINTONIA_CIERRE_FALLBACK_URLS.length) {
+            sintoniaCierreAudio._fallbackIdx = nextIdx;
+            sintoniaCierreAudio.src = SINTONIA_CIERRE_FALLBACK_URLS[nextIdx];
+            if (typeof sintoniaCierreAudio.load === 'function') sintoniaCierreAudio.load();
+            return;
+          }
+          updateSintoniaCierreButtonUI(false);
+          showToast('No se pudo cargar el audio de Sintonía de Cierre');
+        };
+      }
+      const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+      sintoniaCierreAudio.volume = getMasterGain() * factor;
+      return sintoniaCierreAudio;
+    }
+
+    function playSintoniaCierreViaAudioElement() {
+      const audio = ensureSintoniaCierreAudio();
+      if (audio.readyState >= 1) {
+        try { audio.currentTime = 0; } catch (e) {}
+      }
+      const factor = (isManualDuckActive || isVoiceDuckActive) ? 0.22 : 1.0;
+      audio.volume = getMasterGain() * factor;
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          showToast('Pulsa de nuevo para iniciar la Sintonía de Cierre');
+        });
+      }
+    }
+
+    function startSintoniaCierreBufferPlayback(ctx, buffer) {
+      stopSintoniaCierreBufferOnly();
+      if (!sintoniaCierreGain) {
+        sintoniaCierreGain = ctx.createGain();
+        sintoniaCierreGain.connect(musicDuckBus || studioMasterBus);
+      }
+      sintoniaCierreGain.gain.setValueAtTime(getMasterGain(), ctx.currentTime);
+
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.connect(sintoniaCierreGain);
+      sintoniaCierreBufferSource = src;
+      isSintoniaCierreBufferPlaying = true;
+
+      src.onended = () => {
+        if (sintoniaCierreBufferSource === src) {
+          sintoniaCierreBufferSource = null;
+          isSintoniaCierreBufferPlaying = false;
+          updateSintoniaCierreButtonUI(false);
+          refreshMixerIdleStatus();
+        }
+      };
+
+      updateSintoniaCierreButtonUI(true);
+      setMixerVisualStatus('Sintonía de Cierre: Lights Down on the Dial', 0);
+      src.start(0);
+    }
+
+    function stopSintoniaCierreBufferOnly() {
+      if (sintoniaCierreBufferSource) {
+        try { sintoniaCierreBufferSource.onended = null; } catch (e) {}
+        try { sintoniaCierreBufferSource.stop(); } catch (e) {}
+        try { sintoniaCierreBufferSource.disconnect(); } catch (e) {}
+        sintoniaCierreBufferSource = null;
+      }
+      isSintoniaCierreBufferPlaying = false;
+    }
+
+    function toggleSintoniaCierre(btnEl) {
+      if (btnEl) {
+        btnEl.classList.add('pad-active');
+        setTimeout(() => btnEl.classList.remove('pad-active'), 240);
+      }
+      if (isSintoniaCierrePlaying()) {
+        sintoniaCierrePlayToken++;
+        stopSintoniaCierre();
+        showToast('Sintonía de Cierre detenida');
+        return;
+      }
+
+      if (isSintoniaPlaying()) {
+        stopSintoniaOficial();
+      }
+
+      const token = ++sintoniaCierrePlayToken;
+      const ctx = getAudioContext();
+
+      if (typeof fetch !== 'function' || !ctx || typeof ctx.decodeAudioData !== 'function') {
+        playSintoniaCierreViaAudioElement();
+        return;
+      }
+
+      if (sintoniaCierreAudioBuffer && ctx.state === 'running') {
+        startSintoniaCierreBufferPlayback(ctx, sintoniaCierreAudioBuffer);
+        return;
+      }
+
+      const resumePromise = ctx.state === 'suspended' && typeof ctx.resume === 'function'
+        ? ctx.resume().catch(() => {})
+        : Promise.resolve();
+
+      resumePromise.then(async () => {
+        if (token !== sintoniaCierrePlayToken) return;
+        const decoded = await ensureSintoniaCierreDecodedBuffer(ctx);
+        if (token !== sintoniaCierrePlayToken) return;
+        if (decoded && ctx.state === 'running') {
+          startSintoniaCierreBufferPlayback(ctx, decoded);
+        } else {
+          playSintoniaCierreViaAudioElement();
+        }
+      }).catch(() => {
+        if (token === sintoniaCierrePlayToken) {
+          playSintoniaCierreViaAudioElement();
+        }
+      });
+    }
+
+    function stopSintoniaCierre() {
+      sintoniaCierrePlayToken++;
+      stopSintoniaCierreBufferOnly();
+      if (sintoniaCierreAudio) {
+        sintoniaCierreAudio.pause();
+        if (sintoniaCierreAudio.readyState >= 1) {
+          try { sintoniaCierreAudio.currentTime = 0; } catch (e) {}
+        }
+      }
+      updateSintoniaCierreButtonUI(false);
       refreshMixerIdleStatus();
     }
 
@@ -1503,7 +2008,7 @@
 
       if (items.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-2 theme-card border rounded-xl p-4 text-center space-y-2">
+          <div class="col-span-full theme-card border rounded-xl p-4 text-center space-y-2">
             <p class="text-xs font-bold theme-muted">No se encontraron efectos que coincidan con tu búsqueda.</p>
             <button onclick="resetSfxFilters()" class="px-3 py-1 rounded-lg theme-accent-bg text-xs font-extrabold cursor-pointer">
               Mostrar los 24 efectos
@@ -1521,7 +2026,7 @@
 
         if (s.loop) {
           return `
-            <button onclick="toggleLoop('${s.id}')" id="loop-${s.id}" data-sfx-id="${s.id}" class="sound-pad p-2 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center justify-between gap-1 cursor-pointer ${isPlaying ? 'ring-2 ring-amber-300' : ''}">
+            <button onclick="toggleLoop('${s.id}')" id="loop-${s.id}" data-sfx-id="${s.id}" class="sound-pad p-2.5 sm:p-2 min-h-[44px] sm:min-h-0 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center justify-between gap-1 cursor-pointer ${isPlaying ? 'ring-2 ring-amber-300' : ''}">
               <div class="flex items-center gap-1.5 min-w-0">
                 <span class="text-sm shrink-0">${s.icon}</span>
                 <span class="text-[11px] font-extrabold truncate">${s.name}</span>
@@ -1531,7 +2036,7 @@
           `;
         }
         return `
-          <button onclick="playSound('${s.id}', this)" id="sfx-${s.id}" data-sfx-id="${s.id}" class="sound-pad p-2 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center justify-between gap-1 cursor-pointer ${isSelected || isPlaying ? 'ring-2 ring-amber-300' : ''}">
+          <button onclick="playSound('${s.id}', this)" id="sfx-${s.id}" data-sfx-id="${s.id}" class="sound-pad p-2.5 sm:p-2 min-h-[44px] sm:min-h-0 rounded-xl ${s.color} text-white font-bold text-left shadow transition flex items-center justify-between gap-1 cursor-pointer ${isSelected || isPlaying ? 'ring-2 ring-amber-300' : ''}">
             <div class="flex items-center gap-1.5 min-w-0">
               <span class="text-sm shrink-0">${s.icon}</span>
               <span class="text-[11px] font-extrabold truncate">${s.name}</span>
@@ -1954,6 +2459,7 @@
 
     function stopAllSounds() {
       stopSintoniaOficial();
+      stopSintoniaCierre();
       Object.keys(activeOneShots).forEach(id => stopOneShot(id, false));
       Object.keys(activeLoops).forEach(stopSingleLoop);
       for (let i = 1; i <= 6; i++) {
@@ -1977,10 +2483,14 @@
     let micInputSumGain = null;
     let micGainNode = null;
     let micMuteGateNode = null;
+    let micPreampGain = null;
     let micInputAnalyser = null;
     let micEffectInput = null;
     let micEffectOutput = null;
+    let micVoiceLeveler = null;
+    let micMakeupGain = null;
     let micSafetyCompressor = null;
+    let micOutputAnalyser = null;
     let micRecordSendGain = null;
     let micMonitorGain = null;
     let currentVoiceEffect = 'natural';
@@ -1993,6 +2503,7 @@
     let activeReverbTone = null;
     let voiceEffectCleanup = null;
     let selectedMicDeviceId = 'all';
+    let isMicCleanMode = true;
     let isMicMonitorOn = false;
     let micVuRaf = null;
     let isRecPaused = false;
@@ -2002,11 +2513,11 @@
     function getMicInputGain() {
       const el = document.getElementById('mic-gain-slider');
       const parsed = el ? parseFloat(el.value) : 1.0;
-      return Number.isFinite(parsed) ? Math.min(2, Math.max(0, parsed)) : 1.0;
+      return Number.isFinite(parsed) ? Math.min(4, Math.max(0, parsed)) : 1.0;
     }
 
     function updateMicInputVolume(val, persist = true) {
-      const clamped = Math.min(2, Math.max(0, parseFloat(val) || 0));
+      const clamped = Math.min(4, Math.max(0, parseFloat(val) || 0));
       const slider = document.getElementById('mic-gain-slider');
       const lbl = document.getElementById('mic-gain-val');
       if (slider) slider.value = clamped;
@@ -2022,6 +2533,12 @@
 
       micInputSumGain = ctx.createGain();
       micInputSumGain.gain.value = 1.0;
+      // Centrar señales mono o interfaces estéreo con micro en un solo canal (L) en ambos canales
+      try {
+        micInputSumGain.channelCount = 1;
+        micInputSumGain.channelCountMode = 'explicit';
+        micInputSumGain.channelInterpretation = 'speakers';
+      } catch (e) {}
 
       micGainNode = ctx.createGain();
       micGainNode.gain.value = getMicInputGain();
@@ -2029,6 +2546,10 @@
       micMuteGateNode = ctx.createGain();
       const chk = document.getElementById('rec-include-mic');
       micMuteGateNode.gain.value = (!chk || chk.checked) ? 1.0 : 0.0;
+
+      // Preamplificador limpio de voz (+6.8 dB) para micros USB/portátil de señal baja
+      micPreampGain = ctx.createGain();
+      micPreampGain.gain.value = 2.2;
 
       micInputAnalyser = typeof ctx.createAnalyser === 'function' ? ctx.createAnalyser() : null;
       if (micInputAnalyser) {
@@ -2041,15 +2562,35 @@
       micEffectOutput = ctx.createGain();
       micEffectOutput.gain.value = 1.0;
 
+      // Nivelador suave de locución + ganancia de compensación (+5.3 dB) + limitador anti-saturación
+      micVoiceLeveler = typeof ctx.createDynamicsCompressor === 'function'
+        ? ctx.createDynamicsCompressor()
+        : ctx.createGain();
+      if (micVoiceLeveler.threshold) {
+        micVoiceLeveler.threshold.setValueAtTime(-24, ctx.currentTime);
+        micVoiceLeveler.knee.setValueAtTime(18, ctx.currentTime);
+        micVoiceLeveler.ratio.setValueAtTime(3.5, ctx.currentTime);
+        micVoiceLeveler.attack.setValueAtTime(0.008, ctx.currentTime);
+        micVoiceLeveler.release.setValueAtTime(0.22, ctx.currentTime);
+      }
+
+      micMakeupGain = ctx.createGain();
+      micMakeupGain.gain.value = 1.85;
+
       micSafetyCompressor = typeof ctx.createDynamicsCompressor === 'function'
         ? ctx.createDynamicsCompressor()
         : ctx.createGain();
       if (micSafetyCompressor.threshold) {
-        micSafetyCompressor.threshold.setValueAtTime(-10, ctx.currentTime);
-        micSafetyCompressor.knee.setValueAtTime(10, ctx.currentTime);
-        micSafetyCompressor.ratio.setValueAtTime(6, ctx.currentTime);
-        micSafetyCompressor.attack.setValueAtTime(0.003, ctx.currentTime);
-        micSafetyCompressor.release.setValueAtTime(0.15, ctx.currentTime);
+        micSafetyCompressor.threshold.setValueAtTime(-2.0, ctx.currentTime);
+        micSafetyCompressor.knee.setValueAtTime(2.0, ctx.currentTime);
+        micSafetyCompressor.ratio.setValueAtTime(16, ctx.currentTime);
+        micSafetyCompressor.attack.setValueAtTime(0.001, ctx.currentTime);
+        micSafetyCompressor.release.setValueAtTime(0.08, ctx.currentTime);
+      }
+
+      micOutputAnalyser = typeof ctx.createAnalyser === 'function' ? ctx.createAnalyser() : null;
+      if (micOutputAnalyser) {
+        micOutputAnalyser.fftSize = 256;
       }
 
       micRecordSendGain = ctx.createGain();
@@ -2060,21 +2601,30 @@
 
       micInputSumGain.connect(micGainNode);
       micGainNode.connect(micMuteGateNode);
+      micMuteGateNode.connect(micPreampGain);
       if (micInputAnalyser) {
-        micMuteGateNode.connect(micInputAnalyser);
+        micPreampGain.connect(micInputAnalyser);
         micInputAnalyser.connect(micEffectInput);
       } else {
-        micMuteGateNode.connect(micEffectInput);
+        micPreampGain.connect(micEffectInput);
       }
 
-      micEffectOutput.connect(micSafetyCompressor);
+      micEffectOutput.connect(micVoiceLeveler);
+      micVoiceLeveler.connect(micMakeupGain);
+      micMakeupGain.connect(micSafetyCompressor);
 
-      if (recordDestination) {
-        micSafetyCompressor.connect(micRecordSendGain);
-        micRecordSendGain.connect(recordDestination);
+      const postMicNode = micOutputAnalyser || micSafetyCompressor;
+      if (micOutputAnalyser) {
+        micSafetyCompressor.connect(micOutputAnalyser);
+      }
+
+      const targetMixBus = studioRecordMixBus || recordDestination;
+      if (targetMixBus) {
+        postMicNode.connect(micRecordSendGain);
+        micRecordSendGain.connect(targetMixBus);
       }
       // Mantener el grafo activo en el reloj de Web Audio (en silencio 0.0 salvo que el usuario active Monitor)
-      micSafetyCompressor.connect(micMonitorGain);
+      postMicNode.connect(micMonitorGain);
       micMonitorGain.connect(ctx.destination);
 
       buildVoiceEffectChain(currentVoiceEffect);
@@ -2565,22 +3115,24 @@
 
     function startMicVuMeter() {
       stopMicVuMeter();
-      if (!micInputAnalyser) return;
-      const data = new Uint8Array(micInputAnalyser.frequencyBinCount);
+      const analyser = micOutputAnalyser || micInputAnalyser;
+      if (!analyser) return;
+      const data = new Uint8Array(analyser.frequencyBinCount);
       const loop = () => {
         const bar = document.getElementById('mic-vu-bar');
-        if (!micInputAnalyser || !hasLiveMicTrack()) {
+        const activeAnalyser = micOutputAnalyser || micInputAnalyser;
+        if (!activeAnalyser || !hasLiveMicTrack()) {
           if (bar) bar.style.width = '0%';
           return;
         }
-        micInputAnalyser.getByteTimeDomainData(data);
+        activeAnalyser.getByteTimeDomainData(data);
         let peak = 0;
         for (let i = 0; i < data.length; i++) {
           const amp = Math.abs(data[i] - 128) / 128;
           if (amp > peak) peak = amp;
         }
-        const pct = Math.min(100, Math.round(peak * 220));
-        if (isAutoDuckEnabled && peak > 0.08 && hasLiveMicTrack()) {
+        const pct = Math.min(100, Math.round(peak * 145));
+        if (isAutoDuckEnabled && peak > 0.06 && hasLiveMicTrack()) {
           engageVoiceAutoDuck();
         }
         if (bar) {
@@ -2605,6 +3157,39 @@
       if (bar) bar.style.width = '0%';
     }
 
+    function normalizeMicDeviceLabel(label) {
+      return String(label || '')
+        .toLowerCase()
+        .replace(/^(predeterminado|default|comunicaciones|communications)\s*[-–:]\s*/i, '')
+        .trim();
+    }
+
+    function isLoopbackMicLabel(label) {
+      return /(stereo\s*mix|mezcla\s*est[eé]reo|what\s*u\s*hear|loopback|monitor\s*of)/i.test(String(label || ''));
+    }
+
+    function updateMicCleanModeUI() {
+      const btn = document.getElementById('btn-mic-clean-mode');
+      if (!btn) return;
+      btn.setAttribute('aria-pressed', String(isMicCleanMode));
+      btn.textContent = isMicCleanMode ? '✨ Captura: Estudio' : '🔇 Captura: Anti-Eco';
+      btn.className = isMicCleanMode
+        ? 'teacher-only px-2.5 py-1 rounded-lg bg-sky-600/20 text-sky-300 border border-sky-500/60 font-extrabold text-[11px] cursor-pointer whitespace-nowrap'
+        : 'teacher-only px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/60 font-extrabold text-[11px] cursor-pointer whitespace-nowrap';
+    }
+
+    async function toggleMicCleanMode() {
+      isMicCleanMode = !isMicCleanMode;
+      updateMicCleanModeUI();
+      saveAppState();
+      if (hasLiveMicTrack()) {
+        await armMicrophones(false);
+      }
+      showToast(isMicCleanMode
+        ? 'Captura Estudio activada: audio natural sin filtros telefónicos ni distorsión (recomendado con auriculares).'
+        : 'Captura Anti-Eco activada: reduce ruido de sala y eco si grabas con altavoces.');
+    }
+
     async function populateMicDeviceSelect() {
       const sel = document.getElementById('mic-device-select');
       if (!sel || typeof navigator === 'undefined' || !navigator.mediaDevices || typeof navigator.mediaDevices.enumerateDevices !== 'function') return [];
@@ -2616,7 +3201,7 @@
 
         const autoOpt = document.createElement('option');
         autoOpt.value = 'all';
-        const physicalCount = inputs.filter(d => d.deviceId && d.deviceId !== 'default' && d.deviceId !== 'communications').length;
+        const physicalCount = inputs.filter(d => d.deviceId && d.deviceId !== 'default' && d.deviceId !== 'communications' && !isLoopbackMicLabel(d.label)).length;
         autoOpt.textContent = physicalCount > 1
           ? `Todos los micros (${physicalCount} detectados)`
           : 'Todos los micros (Auto)';
@@ -2641,10 +3226,15 @@
     }
 
     async function openMicStream(deviceId) {
+      const processingConstraints = {
+        echoCancellation: !isMicCleanMode,
+        noiseSuppression: !isMicCleanMode,
+        autoGainControl: true
+      };
       const baseConstraints = {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: false
+        ...processingConstraints,
+        channelCount: { ideal: 1 },
+        sampleRate: { ideal: 48000 }
       };
       if (deviceId && deviceId !== 'all') {
         try {
@@ -2652,15 +3242,23 @@
             audio: { ...baseConstraints, deviceId: { exact: deviceId } }
           });
         } catch (err) {
-          return await navigator.mediaDevices.getUserMedia({
-            audio: { ...baseConstraints, deviceId: { ideal: deviceId } }
-          });
+          try {
+            return await navigator.mediaDevices.getUserMedia({
+              audio: { ...processingConstraints, deviceId: { ideal: deviceId } }
+            });
+          } catch (err2) {
+            return await navigator.mediaDevices.getUserMedia({ audio: true });
+          }
         }
       }
       try {
         return await navigator.mediaDevices.getUserMedia({ audio: baseConstraints });
       } catch (err) {
-        return await navigator.mediaDevices.getUserMedia({ audio: true });
+        try {
+          return await navigator.mediaDevices.getUserMedia({ audio: processingConstraints });
+        } catch (err2) {
+          return await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
       }
     }
 
@@ -2696,24 +3294,33 @@
 
         const inputs = await populateMicDeviceSelect();
 
-        // Si está en modo "Todos los micros", añadir también otros micrófonos físicos conectados
+        // Si está en modo "Todos los micros", añadir también otros micrófonos físicos distintos (evitando duplicar el Predeterminado o Mezcla Estéreo)
         if (selectedMicDeviceId === 'all' && Array.isArray(inputs) && inputs.length > 1) {
           const physicalInputs = inputs.filter(d =>
             d.deviceId &&
             d.deviceId !== 'default' &&
             d.deviceId !== 'communications' &&
-            d.deviceId !== firstDevId
+            d.deviceId !== firstDevId &&
+            !isLoopbackMicLabel(d.label)
           );
 
-          const openedLabels = new Set(micEntries.map(e => e.label).filter(Boolean));
+          const openedLabels = new Set(micEntries.map(e => normalizeMicDeviceLabel(e.label)).filter(Boolean));
           for (const dev of physicalInputs.slice(0, 3)) {
-            if (dev.label && openedLabels.has(dev.label)) continue;
+            const normLabel = normalizeMicDeviceLabel(dev.label);
+            if (normLabel && openedLabels.has(normLabel)) continue;
             try {
               const extraStream = await openMicStream(dev.deviceId);
               const extraTrack = extraStream.getAudioTracks()[0];
               const extraLabel = (extraTrack && extraTrack.label) || dev.label || 'Micrófono adicional';
+              const normExtra = normalizeMicDeviceLabel(extraLabel);
+              if (normExtra && openedLabels.has(normExtra)) {
+                if (typeof extraStream.getTracks === 'function') {
+                  extraStream.getTracks().forEach(t => { try { t.stop(); } catch (e) {} });
+                }
+                continue;
+              }
               addStreamEntry(extraStream, dev.deviceId, extraLabel);
-              if (extraLabel) openedLabels.add(extraLabel);
+              if (normExtra) openedLabels.add(normExtra);
             } catch (e) {
               // Ignorar si un segundo dispositivo está ocupado por el sistema
             }
@@ -2816,11 +3423,16 @@
       const directRow = document.getElementById('direct-recorder-row');
       const micRow = document.getElementById('mic-controls-row');
       const mixerBanner = document.getElementById('mixer-audacity-banner');
+      const dockRecBtn = document.getElementById('dock-btn-rec');
       if (directRow) directRow.classList.toggle('hidden', isMixer);
       if (micRow) micRow.classList.toggle('hidden', isMixer);
       if (mixerBanner) {
         mixerBanner.classList.toggle('hidden', !isMixer);
         mixerBanner.classList.toggle('flex', isMixer);
+      }
+      if (dockRecBtn) {
+        dockRecBtn.disabled = isMixer;
+        dockRecBtn.classList.toggle('opacity-40', isMixer);
       }
 
       if (isMixer) {
@@ -2914,6 +3526,7 @@
       const pauseBtn = document.getElementById('btn-rec-pause');
       const dlBtn = document.getElementById('btn-rec-download');
       const previewEl = document.getElementById('rec-preview-audio');
+      const dockRecBtn = document.getElementById('dock-btn-rec');
 
       if (timerEl) timerEl.textContent = formatClockMMSS(recSeconds);
 
@@ -2924,7 +3537,11 @@
         }
         if (toggleBtn) {
           toggleBtn.innerHTML = '<span>⏹️</span> <span>Detener Grabación</span>';
-          toggleBtn.className = 'px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+          toggleBtn.className = 'px-3 py-2 sm:py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+        }
+        if (dockRecBtn) {
+          dockRecBtn.innerHTML = '<span class="text-sm">⏹️</span><span>Detener</span>';
+          dockRecBtn.className = 'py-2 px-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer';
         }
         if (pauseBtn) {
           pauseBtn.classList.remove('hidden');
@@ -2949,7 +3566,11 @@
         }
         if (toggleBtn) {
           toggleBtn.innerHTML = '<span>🔴</span> <span>Nueva Grabación</span>';
-          toggleBtn.className = 'px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+          toggleBtn.className = 'px-3 py-2 sm:py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+        }
+        if (dockRecBtn) {
+          dockRecBtn.innerHTML = '<span class="text-sm">🔴</span><span>Grabar</span>';
+          dockRecBtn.className = 'py-2 px-1 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer';
         }
         if (pauseBtn) {
           pauseBtn.classList.add('hidden');
@@ -2963,7 +3584,11 @@
         }
         if (toggleBtn) {
           toggleBtn.innerHTML = '<span>🔴</span> <span>Grabar Programa</span>';
-          toggleBtn.className = 'px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+          toggleBtn.className = 'px-3 py-2 sm:py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs shadow transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0';
+        }
+        if (dockRecBtn) {
+          dockRecBtn.innerHTML = '<span class="text-sm">🔴</span><span>Grabar</span>';
+          dockRecBtn.className = 'py-2 px-1 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-[11px] flex flex-col items-center justify-center leading-tight cursor-pointer';
         }
         if (pauseBtn) {
           pauseBtn.classList.add('hidden');
@@ -2972,6 +3597,147 @@
         if (dlBtn) dlBtn.disabled = true;
         if (previewEl) previewEl.classList.add('hidden');
       }
+    }
+
+    let pcmLeftChunks = [];
+    let pcmRightChunks = [];
+    let pcmTotalFrames = 0;
+    let pcmRecorderNode = null;
+    let pcmRecorderSink = null;
+    let pcmWorkletLoadedForCtx = null;
+
+    function mergeFloat32Chunks(chunks, totalFrames) {
+      const merged = new Float32Array(totalFrames);
+      let offset = 0;
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        merged.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return merged;
+    }
+
+    function teardownPcmCapture() {
+      const tapSource = programRecordLimiter || studioRecordMixBus;
+      if (pcmRecorderNode) {
+        if (tapSource) {
+          try { tapSource.disconnect(pcmRecorderNode); } catch (e) {}
+        }
+        try { pcmRecorderNode.disconnect(); } catch (e) {}
+        if ('onaudioprocess' in pcmRecorderNode) {
+          pcmRecorderNode.onaudioprocess = null;
+        }
+        if (pcmRecorderNode.port) {
+          try { pcmRecorderNode.port.postMessage({ type: 'stop' }); } catch (e) {}
+          pcmRecorderNode.port.onmessage = null;
+        }
+        pcmRecorderNode = null;
+      }
+      if (pcmRecorderSink) {
+        try { pcmRecorderSink.disconnect(); } catch (e) {}
+        pcmRecorderSink = null;
+      }
+    }
+
+    async function setupLosslessPcmCapture(ctx) {
+      teardownPcmCapture();
+      pcmLeftChunks = [];
+      pcmRightChunks = [];
+      pcmTotalFrames = 0;
+
+      const tapSource = programRecordLimiter || studioRecordMixBus;
+      if (!tapSource) return false;
+
+      if (typeof AudioWorkletNode !== 'undefined' && ctx.audioWorklet && typeof ctx.audioWorklet.addModule === 'function' && typeof Blob !== 'undefined') {
+        try {
+          if (pcmWorkletLoadedForCtx !== ctx) {
+            const processorCode = `
+              class RadioPcmCaptureProcessor extends AudioWorkletProcessor {
+                constructor() {
+                  super();
+                  this.paused = false;
+                  this.stopped = false;
+                  this.port.onmessage = (e) => {
+                    if (e.data && e.data.type === 'pause') this.paused = Boolean(e.data.paused);
+                    if (e.data && e.data.type === 'stop') this.stopped = true;
+                  };
+                }
+                process(inputs) {
+                  if (this.stopped) return false;
+                  if (this.paused || !inputs || !inputs[0] || !inputs[0].length) return true;
+                  const ch0 = inputs[0][0];
+                  const ch1 = inputs[0][1] || ch0;
+                  if (ch0 && ch0.length) {
+                    const left = new Float32Array(ch0);
+                    const right = new Float32Array(ch1);
+                    this.port.postMessage({ left, right }, [left.buffer, right.buffer]);
+                  }
+                  return true;
+                }
+              }
+              registerProcessor('radio-pcm-capture', RadioPcmCaptureProcessor);
+            `;
+            const blobUrl = URL.createObjectURL(new Blob([processorCode], { type: 'application/javascript' }));
+            try {
+              await ctx.audioWorklet.addModule(blobUrl);
+              pcmWorkletLoadedForCtx = ctx;
+            } finally {
+              URL.revokeObjectURL(blobUrl);
+            }
+          }
+
+          const workletNode = new AudioWorkletNode(ctx, 'radio-pcm-capture', {
+            numberOfInputs: 1,
+            numberOfOutputs: 1,
+            outputChannelCount: [2]
+          });
+          workletNode.port.onmessage = (ev) => {
+            if (!ev.data || !ev.data.left) return;
+            pcmLeftChunks.push(ev.data.left);
+            pcmRightChunks.push(ev.data.right || ev.data.left);
+            pcmTotalFrames += ev.data.left.length;
+          };
+          const silentSink = ctx.createGain();
+          silentSink.gain.value = 0;
+          tapSource.connect(workletNode);
+          workletNode.connect(silentSink);
+          silentSink.connect(ctx.destination);
+          pcmRecorderNode = workletNode;
+          pcmRecorderSink = silentSink;
+          return true;
+        } catch (e) {
+          // Fallback a ScriptProcessorNode si AudioWorklet falla (p.ej. file:// estricto)
+        }
+      }
+
+      if (typeof ctx.createScriptProcessor === 'function') {
+        try {
+          const proc = ctx.createScriptProcessor(4096, 2, 2);
+          proc.onaudioprocess = (ev) => {
+            if (isRecPaused) return;
+            const inBuf = ev.inputBuffer;
+            const left = new Float32Array(inBuf.getChannelData(0));
+            const right = inBuf.numberOfChannels > 1
+              ? new Float32Array(inBuf.getChannelData(1))
+              : new Float32Array(left);
+            pcmLeftChunks.push(left);
+            pcmRightChunks.push(right);
+            pcmTotalFrames += left.length;
+          };
+          const silentSink = ctx.createGain();
+          silentSink.gain.value = 0;
+          tapSource.connect(proc);
+          proc.connect(silentSink);
+          silentSink.connect(ctx.destination);
+          pcmRecorderNode = proc;
+          pcmRecorderSink = silentSink;
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      return false;
     }
 
     async function toggleProgramRecording() {
@@ -3029,14 +3795,24 @@
       isRecPaused = false;
       recSeconds = 0;
 
+      await setupLosslessPcmCapture(ctx);
+
       try {
         mediaRecorder = chosenMime
-          ? new MediaRecorder(recordDestination.stream, { mimeType: chosenMime })
-          : new MediaRecorder(recordDestination.stream);
+          ? new MediaRecorder(recordDestination.stream, { mimeType: chosenMime, audioBitsPerSecond: 192000 })
+          : new MediaRecorder(recordDestination.stream, { audioBitsPerSecond: 192000 });
         recordedMimeType = mediaRecorder.mimeType || chosenMime || 'audio/webm';
       } catch (e) {
-        showToast('No se pudo iniciar la grabadora del navegador.');
-        return;
+        try {
+          mediaRecorder = chosenMime
+            ? new MediaRecorder(recordDestination.stream, { mimeType: chosenMime })
+            : new MediaRecorder(recordDestination.stream);
+          recordedMimeType = mediaRecorder.mimeType || chosenMime || 'audio/webm';
+        } catch (e2) {
+          teardownPcmCapture();
+          showToast('No se pudo iniciar la grabadora del navegador.');
+          return;
+        }
       }
 
       mediaRecorder.ondataavailable = (ev) => {
@@ -3045,7 +3821,21 @@
 
       mediaRecorder.onstop = () => {
         clearInterval(recTimerInterval);
-        recordedBlob = new Blob(recordedChunks, { type: recordedMimeType });
+        teardownPcmCapture();
+
+        if (pcmTotalFrames > 0 && pcmLeftChunks.length > 0) {
+          const left = mergeFloat32Chunks(pcmLeftChunks, pcmTotalFrames);
+          const right = mergeFloat32Chunks(pcmRightChunks, pcmTotalFrames);
+          const wavBuf = createWavArrayBufferFromSamples([left, right], ctx.sampleRate || 48000);
+          recordedBlob = new Blob([wavBuf], { type: 'audio/wav' });
+          recordedMimeType = 'audio/wav';
+          pcmLeftChunks = [];
+          pcmRightChunks = [];
+          pcmTotalFrames = 0;
+        } else {
+          recordedBlob = new Blob(recordedChunks, { type: recordedMimeType });
+        }
+
         const previewEl = document.getElementById('rec-preview-audio');
         if (previewEl) {
           if (previewEl.src && previewEl.src.startsWith('blob:')) {
@@ -3055,7 +3845,7 @@
           previewEl.classList.remove('hidden');
         }
         updateRecorderUI('ready');
-        showToast('Grabación finalizada. Ya puedes escucharla o descargarla.');
+        showToast('Grabación finalizada en alta calidad (.wav). Ya puedes escucharla o descargarla.');
       };
 
       mediaRecorder.start(250);
@@ -3087,11 +3877,17 @@
       if (mediaRecorder.state === 'recording' && typeof mediaRecorder.pause === 'function') {
         mediaRecorder.pause();
         isRecPaused = true;
+        if (pcmRecorderNode && pcmRecorderNode.port) {
+          try { pcmRecorderNode.port.postMessage({ type: 'pause', paused: true }); } catch (e) {}
+        }
         updateRecorderUI('paused');
         showToast('Grabación en pausa');
       } else if (mediaRecorder.state === 'paused' && typeof mediaRecorder.resume === 'function') {
         mediaRecorder.resume();
         isRecPaused = false;
+        if (pcmRecorderNode && pcmRecorderNode.port) {
+          try { pcmRecorderNode.port.postMessage({ type: 'pause', paused: false }); } catch (e) {}
+        }
         updateRecorderUI('recording');
         showToast('Grabación reanudada');
       }
@@ -3143,28 +3939,36 @@
         btn.innerHTML = '<span>🩺</span> <span>Habla ahora (4s)...</span>';
       }
 
+      const checkTapNode = micOutputAnalyser || micSafetyCompressor;
       const testDest = typeof ctx.createMediaStreamDestination === 'function' ? ctx.createMediaStreamDestination() : null;
-      if (testDest && micSafetyCompressor) {
-        micSafetyCompressor.connect(testDest);
+      if (testDest && checkTapNode) {
+        checkTapNode.connect(testDest);
       }
 
       let testRecorder = null;
       const chunks = [];
       if (testDest && typeof MediaRecorder !== 'undefined') {
         try {
-          testRecorder = new MediaRecorder(testDest.stream);
+          testRecorder = new MediaRecorder(testDest.stream, { audioBitsPerSecond: 192000 });
+        } catch (e) {
+          try {
+            testRecorder = new MediaRecorder(testDest.stream);
+          } catch (e2) {
+            testRecorder = null;
+          }
+        }
+        if (testRecorder) {
           testRecorder.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) chunks.push(ev.data); };
           testRecorder.start(200);
-        } catch (e) {
-          testRecorder = null;
         }
       }
 
       let maxPeak = 0;
-      const data = micInputAnalyser ? new Uint8Array(micInputAnalyser.frequencyBinCount) : null;
+      const checkAnalyser = micOutputAnalyser || micInputAnalyser;
+      const data = checkAnalyser ? new Uint8Array(checkAnalyser.frequencyBinCount) : null;
       const sampleIv = setInterval(() => {
-        if (!micInputAnalyser || !data) return;
-        micInputAnalyser.getByteTimeDomainData(data);
+        if (!checkAnalyser || !data) return;
+        checkAnalyser.getByteTimeDomainData(data);
         for (let i = 0; i < data.length; i++) {
           const amp = Math.abs(data[i] - 128) / 128;
           if (amp > maxPeak) maxPeak = amp;
@@ -3184,8 +3988,8 @@
       clearInterval(cdIv);
 
       const finishCheck = (blob) => {
-        if (testDest && micSafetyCompressor) {
-          try { micSafetyCompressor.disconnect(testDest); } catch (e) {}
+        if (testDest && checkTapNode) {
+          try { checkTapNode.disconnect(testDest); } catch (e) {}
         }
         isQuickMicTesting = false;
         if (btn) {
@@ -3207,10 +4011,10 @@
           }
         }
 
-        if (maxPeak < 0.04) {
+        if (maxPeak < 0.05) {
           showToast('⚠️ Prueba completada: señal muy baja. Acerca el micro o sube "Vol. Micro".');
-        } else if (maxPeak > 0.88) {
-          showToast('⚠️ Prueba completada: señal saturada. Aléjate un poco o baja "Vol. Micro".');
+        } else if (maxPeak > 0.94) {
+          showToast('⚠️ Prueba completada: señal muy alta. Aléjate un poco o baja "Vol. Micro".');
         } else {
           showToast('✅ Prueba completada: nivel de micrófono óptimo. Escucha tu prueba arriba.');
         }
@@ -3286,21 +4090,29 @@
 
       const baseName = buildProgramDownloadBasename();
       let finalBlob = recordedBlob;
-      let ext = recordedMimeType.includes('ogg') ? 'ogg' : recordedMimeType.includes('mp4') ? 'm4a' : 'webm';
+      let ext = recordedMimeType.includes('wav')
+        ? 'wav'
+        : recordedMimeType.includes('ogg')
+          ? 'ogg'
+          : recordedMimeType.includes('mp4')
+            ? 'm4a'
+            : 'webm';
 
-      try {
-        const ctx = getAudioContext();
-        const rawBuf = await recordedBlob.arrayBuffer();
-        const audioBuf = await ctx.decodeAudioData(rawBuf.slice(0));
-        const channels = [];
-        for (let ch = 0; ch < Math.min(2, audioBuf.numberOfChannels); ch++) {
-          channels.push(audioBuf.getChannelData(ch));
+      if (ext !== 'wav') {
+        try {
+          const ctx = getAudioContext();
+          const rawBuf = await recordedBlob.arrayBuffer();
+          const audioBuf = await ctx.decodeAudioData(rawBuf.slice(0));
+          const channels = [];
+          for (let ch = 0; ch < Math.min(2, audioBuf.numberOfChannels); ch++) {
+            channels.push(audioBuf.getChannelData(ch));
+          }
+          const wavBuf = createWavArrayBufferFromSamples(channels, audioBuf.sampleRate);
+          finalBlob = new Blob([wavBuf], { type: 'audio/wav' });
+          ext = 'wav';
+        } catch (e) {
+          // Fallback directo al formato nativo capturado si el navegador no decodifica el contenedor
         }
-        const wavBuf = createWavArrayBufferFromSamples(channels, audioBuf.sampleRate);
-        finalBlob = new Blob([wavBuf], { type: 'audio/wav' });
-        ext = 'wav';
-      } catch (e) {
-        // Fallback directo al formato nativo capturado si el navegador no decodifica el contenedor
       }
 
       const filename = `${baseName}.${ext}`;
@@ -3861,6 +4673,11 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       const norm = normalizeTextForSearch(cueText);
       if (!norm) return false;
 
+      if (norm.includes('sintonia de cierre') || norm.includes('sintonia cierre')) {
+        toggleSintoniaCierre(document.getElementById('btn-sintonia-cierre'));
+        return true;
+      }
+
       if (norm.includes('sintonia')) {
         toggleSintoniaOficial(document.getElementById('btn-sintonia-oficial'));
         return true;
@@ -3878,17 +4695,17 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
         'nave espacial': 'space_ship',
         'bosque y pajaros': 'forest',
         'bosque pajaros': 'forest',
-        'cambio noticias': 'news_sting',
+        'cambio noticias': 'news',
         'timbre colegio': 'school_bell',
         'melodia cierre': 'outro',
-        'salto hiperespacial': 'warp',
-        'hiperespacio': 'warp',
+        'salto hiperespacial': 'hyperspace',
+        'hiperespacio': 'hyperspace',
         'ultima hora': 'breaking',
         'entrada corta': 'intro',
         'aplausos': 'applause',
-        'risas': 'laugh',
+        'risas': 'laughter',
         'redoble tambor': 'drumroll',
-        'reloj': 'clock',
+        'reloj': 'tictac',
         'silbato': 'whistle',
         'lluvia': 'rain',
         'viento': 'wind',
@@ -3921,7 +4738,7 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       }
 
       if (matched) {
-        if (matched.isLoop) toggleLoop(matched.id);
+        if (matched.loop) toggleLoop(matched.id);
         else playSound(matched.id);
         return true;
       }
@@ -4116,6 +4933,11 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
         const btn = document.getElementById('prompter-play-btn');
         btn.innerHTML = '<span>⏸️</span> <span>Pausar</span>';
         btn.classList.replace('bg-emerald-600', 'bg-amber-600');
+        const dockPlay = document.getElementById('dock-btn-play');
+        if (dockPlay) {
+          dockPlay.innerHTML = '<span class="text-sm">⏸️</span><span>Pausar</span>';
+          dockPlay.classList.replace('bg-emerald-600', 'bg-amber-600');
+        }
         prompterRafId = requestAnimationFrame(prompterStep);
       }
     }
@@ -4128,6 +4950,11 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       const btn = document.getElementById('prompter-play-btn');
       btn.innerHTML = '<span>▶️</span> <span>Iniciar Desplazamiento</span>';
       btn.classList.replace('bg-amber-600', 'bg-emerald-600');
+      const dockPlay = document.getElementById('dock-btn-play');
+      if (dockPlay) {
+        dockPlay.innerHTML = '<span class="text-sm">▶️</span><span>Leer</span>';
+        dockPlay.classList.replace('bg-amber-600', 'bg-emerald-600');
+      }
     }
 
     function resetPrompterScroll() {
@@ -4244,6 +5071,7 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
           reverbRoomSize: reverbRoomSize,
           reverbDepth: reverbDepth,
           micDeviceId: selectedMicDeviceId,
+          micCleanMode: isMicCleanMode,
           autoDuck: isAutoDuckEnabled,
           slots: slotsData
         }
@@ -4334,6 +5162,10 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
           }
           if (typeof data.audio.micDeviceId === 'string') {
             selectedMicDeviceId = data.audio.micDeviceId;
+          }
+          if (typeof data.audio.micCleanMode === 'boolean') {
+            isMicCleanMode = data.audio.micCleanMode;
+            updateMicCleanModeUI();
           }
           if (typeof data.audio.autoDuck === 'boolean') {
             isAutoDuckEnabled = data.audio.autoDuck;
@@ -4586,6 +5418,39 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       }
     }
 
+    let currentMobileCabinaTab = 'all';
+    let isMobileStudioExtrasOpen = false;
+
+    function setMobileCabinaTab(tabName) {
+      const valid = ['teleprompter', 'console', 'all'].includes(tabName) ? tabName : 'all';
+      currentMobileCabinaTab = valid;
+      const viewCabina = document.getElementById('view-cabina');
+      if (viewCabina) viewCabina.setAttribute('data-mobile-cabina-tab', valid);
+
+      ['teleprompter', 'console', 'all'].forEach(key => {
+        const btn = document.getElementById(`mobile-tab-${key}`);
+        if (!btn) return;
+        const active = key === valid;
+        btn.setAttribute('aria-selected', String(active));
+        btn.className = active
+          ? 'py-2 px-2 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1 cursor-pointer theme-accent-bg shadow'
+          : 'py-2 px-2 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1 cursor-pointer theme-card';
+      });
+    }
+
+    function toggleMobileStudioExtras(forceState) {
+      isMobileStudioExtrasOpen = typeof forceState === 'boolean' ? forceState : !isMobileStudioExtrasOpen;
+      const extras = document.getElementById('mobile-studio-extras');
+      const btn = document.getElementById('btn-mobile-studio-extras');
+      const lbl = document.getElementById('mobile-extras-label');
+      if (extras) {
+        extras.classList.toggle('hidden', !isMobileStudioExtrasOpen);
+        extras.classList.toggle('flex', isMobileStudioExtrasOpen);
+      }
+      if (btn) btn.setAttribute('aria-expanded', String(isMobileStudioExtrasOpen));
+      if (lbl) lbl.textContent = isMobileStudioExtrasOpen ? 'Ocultar Ajustes' : 'Ajustes Micro';
+    }
+
     function switchTab(tabName) {
       ['cabina', 'repos', 'guide'].forEach(name => {
         const viewEl = document.getElementById(`view-${name}`);
@@ -4594,9 +5459,9 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
         if (!btn) return;
         const teacherCls = name === 'cabina' ? '' : ' teacher-only';
         if (name === tabName) {
-          btn.className = `tab-btn${teacherCls} px-3 py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow`;
+          btn.className = `tab-btn${teacherCls} px-2.5 py-2 sm:py-1.5 rounded-xl font-extrabold text-xs theme-accent-bg transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow`;
         } else {
-          btn.className = `tab-btn${teacherCls} px-3 py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer`;
+          btn.className = `tab-btn${teacherCls} px-2.5 py-2 sm:py-1.5 rounded-xl font-bold text-xs theme-card border transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer`;
         }
       });
     }
@@ -4716,6 +5581,11 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
 
       updateAutoDuckUI();
       updateManualDuckUI();
+      updateMicCleanModeUI();
+
+      // En pantallas de smartphone (< 768px), abrir por defecto en la pestaña Guion para lectura cómoda
+      const initialWidth = typeof window !== 'undefined' && typeof window.innerWidth === 'number' ? window.innerWidth : 1280;
+      setMobileCabinaTab(initialWidth < 768 ? 'teleprompter' : 'all');
 
       if (typeof navigator !== 'undefined' && navigator.mediaDevices && typeof navigator.mediaDevices.addEventListener === 'function') {
         navigator.mediaDevices.addEventListener('devicechange', () => {
@@ -4723,6 +5593,8 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
         });
       }
       populateMicDeviceSelect();
+      prefetchSintoniaBytes();
+      prefetchSintoniaCierreBytes();
       restoreLocalSlotsFromIndexedDB();
     };
 

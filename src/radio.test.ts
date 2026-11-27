@@ -148,6 +148,9 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
   registerEl('btn-sintonia-oficial', 'BUTTON');
   registerEl('sintonia-btn-icon', 'SPAN');
   registerEl('sintonia-btn-label', 'SPAN');
+  registerEl('btn-sintonia-cierre', 'BUTTON');
+  registerEl('sintonia-cierre-btn-icon', 'SPAN');
+  registerEl('sintonia-cierre-btn-label', 'SPAN');
   registerEl('rec-status-badge', 'SPAN');
   registerEl('rec-timer', 'SPAN');
   const micChk = registerEl('rec-include-mic', 'INPUT', 'checkbox', 'on');
@@ -158,6 +161,7 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
   registerEl('mic-gain-slider', 'INPUT', 'range', '1');
   registerEl('mic-gain-val', 'SPAN');
   registerEl('mic-vu-bar', 'DIV');
+  registerEl('btn-mic-clean-mode', 'BUTTON');
   registerEl('btn-auto-duck', 'BUTTON');
   registerEl('btn-manual-duck', 'BUTTON');
   registerEl('manual-duck-label', 'SPAN');
@@ -217,6 +221,20 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
   registerEl('tpl-btn-infantil', 'BUTTON');
   registerEl('tpl-btn-primaria', 'BUTTON');
   registerEl('tpl-btn-eso', 'BUTTON');
+  registerEl('mobile-cabina-tabs', 'DIV');
+  registerEl('mobile-tab-teleprompter', 'BUTTON');
+  registerEl('mobile-tab-console', 'BUTTON');
+  registerEl('mobile-tab-all', 'BUTTON');
+  registerEl('btn-mobile-studio-extras', 'BUTTON');
+  registerEl('mobile-extras-label', 'SPAN');
+  registerEl('mobile-studio-extras', 'DIV').classList.add('hidden');
+  registerEl('mobile-quick-dock', 'DIV');
+  registerEl('dock-btn-play', 'BUTTON');
+  registerEl('dock-btn-sintonia', 'BUTTON');
+  registerEl('dock-btn-sintonia-cierre', 'BUTTON');
+  registerEl('dock-btn-duck', 'BUTTON');
+  registerEl('dock-btn-rec', 'BUTTON');
+  registerEl('dock-btn-stop', 'BUTTON');
 
   const docEl = createMockElement('html', 'HTML');
   const listeners: Record<string, Array<(e: unknown) => void>> = {};
@@ -355,7 +373,16 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
     Audio: MockAudio,
     AudioContext: MockAudioContext,
     MediaRecorder: MockMediaRecorder,
-    Blob: class MockBlob { size = 128; type = 'audio/webm'; },
+    Blob: class MockBlob {
+      size = 128;
+      type: string;
+      constructor(parts: unknown[] = [], opts?: { type?: string }) {
+        this.type = opts?.type || 'audio/webm';
+        if (Array.isArray(parts) && parts[0] && (parts[0] as { byteLength?: number }).byteLength) {
+          this.size = (parts[0] as { byteLength: number }).byteLength;
+        }
+      }
+    },
     navigator: {
       mediaDevices: {
         enumerateDevices: async () => fakeMicDevices,
@@ -635,11 +662,11 @@ test('Sintonía Oficial button plays Palenciana_en_el_aire_7eae12fb.mp3 and WAV 
   const sintonia = ctx.getVmVar<{ src: string; paused: boolean }>('sintoniaAudio');
   assert.equal(sintonia.src, '/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
   assert.equal(sintonia.paused, false);
-  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Parar Sintonía Oficial');
+  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Parar Sintonía de Inicio');
 
   s.toggleSintoniaOficial();
   assert.equal(sintonia.paused, true);
-  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Sintonía Oficial');
+  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Sintonía de Inicio');
 
   // Verify WAV encoder builds a valid 16-bit PCM RIFF/WAVE header
   const ch0 = new Float32Array([0, 0.5, -0.5, 1]);
@@ -974,5 +1001,290 @@ test('Studio autoconfiguration toggles between Direct In-App Recording and Mixer
   assert.equal(second.elements.get('direct-recorder-row')!.classList.contains('hidden'), false);
   assert.equal(second.elements.get('mixer-audacity-banner')!.classList.contains('hidden'), true);
 });
+
+test('Studio clean mic constraints, duplicate/loopback mic deduplication, 400% preamp range, and lossless PCM WAV recording work cleanly', async () => {
+  const first = loadIndexSandbox();
+  const capturedConstraints: Array<Record<string, unknown>> = [];
+
+  const nav = (first.sandbox as {
+    navigator: {
+      mediaDevices: {
+        enumerateDevices: () => Promise<Array<{ kind: string; deviceId: string; label: string }>>;
+        getUserMedia: (c: { audio: Record<string, unknown> }) => Promise<unknown>;
+      };
+    };
+  }).navigator;
+
+  const duplicateDevices = [
+    { kind: 'audioinput', deviceId: 'default', label: 'Predeterminado - Micrófono USB Aula' },
+    { kind: 'audioinput', deviceId: 'usb-a', label: 'Micrófono USB Aula' },
+    { kind: 'audioinput', deviceId: 'stereo-mix', label: 'Mezcla estéreo (Realtek)' },
+    { kind: 'audioinput', deviceId: 'usb-b', label: 'Micrófono USB Mesa 2' }
+  ];
+
+  nav.mediaDevices.enumerateDevices = async () => duplicateDevices;
+  nav.mediaDevices.getUserMedia = async (c: { audio: Record<string, unknown> }) => {
+    capturedConstraints.push(c.audio);
+    const reqId = (c.audio.deviceId as { exact?: string; ideal?: string } | undefined)?.exact
+      || (c.audio.deviceId as { exact?: string; ideal?: string } | undefined)?.ideal
+      || 'default';
+    const dev = duplicateDevices.find(d => d.deviceId === reqId) || duplicateDevices[0];
+    const track = {
+      readyState: 'live',
+      enabled: true,
+      label: dev.label,
+      getSettings: () => ({ deviceId: dev.deviceId === 'default' ? 'usb-a' : dev.deviceId }),
+      stop: () => { track.readyState = 'ended'; }
+    };
+    return { getTracks: () => [track], getAudioTracks: () => [track] };
+  };
+
+  const s1 = first.sandbox as {
+    armMicrophones: (toast?: boolean) => Promise<boolean>;
+    toggleMicCleanMode: () => Promise<void>;
+    updateMicInputVolume: (val: number, persist?: boolean) => void;
+    cleanupMicCapture: () => void;
+    startProgramRecording: () => Promise<void>;
+    stopProgramRecording: () => void;
+  };
+
+  await s1.armMicrophones(false);
+
+  // Clean Studio mode disables WebRTC AEC/NS distortion & enables AGC
+  assert.equal(capturedConstraints[0].echoCancellation, false);
+  assert.equal(capturedConstraints[0].noiseSuppression, false);
+  assert.equal(capturedConstraints[0].autoGainControl, true);
+
+  // Deduplicates "Predeterminado - Micrófono USB Aula" vs "Micrófono USB Aula" and skips "Mezcla estéreo"
+  const entries = first.getVmVar<Array<{ deviceId: string; label: string }>>('micEntries');
+  assert.equal(entries.length, 2);
+  assert.equal(entries.some(e => e.label.includes('Mezcla estéreo')), false);
+
+  // Verify vocal preamp + makeup gain + extended 400% gain ceiling
+  assert.equal(first.getVmVar<{ gain: { value: number } }>('micPreampGain').gain.value, 2.2);
+  assert.equal(first.getVmVar<{ gain: { value: number } }>('micMakeupGain').gain.value, 1.85);
+  s1.updateMicInputVolume(3.25, true);
+  assert.equal(first.elements.get('mic-gain-val')!.textContent, '325%');
+
+  // Toggle to Anti-Eco mode -> re-arms with echoCancellation & noiseSuppression enabled and persists
+  await s1.toggleMicCleanMode();
+  assert.equal(first.getVmVar<boolean>('isMicCleanMode'), false);
+  assert.equal(first.elements.get('btn-mic-clean-mode')!.textContent, '🔇 Captura: Anti-Eco');
+  const lastConstraint = capturedConstraints[capturedConstraints.length - 1];
+  assert.equal(lastConstraint.echoCancellation, true);
+  assert.equal(lastConstraint.noiseSuppression, true);
+
+  // Simulate lossless PCM capture via ScriptProcessor fallback and verify WAV Blob output
+  type AudioProcHandler = (ev: { inputBuffer: { numberOfChannels: number; getChannelData: (c: number) => Float32Array } }) => void;
+  const capturedProcs: AudioProcHandler[] = [];
+  (first.getVmVar<{ createScriptProcessor?: unknown }>('audioCtx')).createScriptProcessor = () => {
+    let fn: AudioProcHandler | null = null;
+    return {
+      connect: () => {},
+      disconnect: () => {},
+      set onaudioprocess(handler: AudioProcHandler | null) {
+        fn = handler;
+        if (handler) capturedProcs.push(handler);
+      },
+      get onaudioprocess() { return fn; }
+    };
+  };
+
+  await s1.startProgramRecording();
+  assert.equal(capturedProcs.length > 0, true);
+  capturedProcs[0]({
+    inputBuffer: {
+      numberOfChannels: 2,
+      getChannelData: () => new Float32Array([0.25, -0.25, 0.5, -0.5])
+    }
+  });
+  s1.stopProgramRecording();
+  assert.equal(first.getVmVar<string>('recordedMimeType'), 'audio/wav');
+  assert.equal(first.getVmVar<{ type: string }>('recordedBlob').type, 'audio/wav');
+
+  s1.cleanupMicCapture();
+
+  // Reload preserves Anti-Eco capture mode & 325% mic gain
+  const second = loadIndexSandbox(Object.fromEntries(first.storageMap.entries()));
+  assert.equal(second.getVmVar<boolean>('isMicCleanMode'), false);
+  assert.equal(second.elements.get('btn-mic-clean-mode')!.textContent, '🔇 Captura: Anti-Eco');
+  assert.equal(second.elements.get('mic-gain-val')!.textContent, '325%');
+});
+
+test('Sintonia Oficial Web Audio decoded buffer playback and stop work cleanly without MediaElementSource silence', async () => {
+  const ctx = loadIndexSandbox();
+  let startedCount = 0;
+  let stoppedCount = 0;
+
+  const sb = ctx.sandbox as {
+    getAudioContext: () => {
+      state: string;
+      decodeAudioData?: (buf: ArrayBuffer) => Promise<{ duration: number; numberOfChannels: number }>;
+      createBufferSource: () => unknown;
+    };
+    fetch?: (url: string) => Promise<{ ok: boolean; arrayBuffer: () => Promise<ArrayBuffer> }>;
+    toggleSintoniaOficial: () => void;
+    stopSintoniaOficial: () => void;
+    isSintoniaPlaying: () => boolean;
+  };
+
+  sb.fetch = async (url: string) => ({
+    ok: url === '/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3',
+    arrayBuffer: async () => new ArrayBuffer(4096)
+  });
+
+  const audioCtx = sb.getAudioContext();
+  audioCtx.decodeAudioData = async () => ({ duration: 179.8, numberOfChannels: 2 });
+  const origCreateBufferSource = audioCtx.createBufferSource.bind(audioCtx);
+  audioCtx.createBufferSource = () => {
+    const src = origCreateBufferSource() as {
+      buffer: unknown;
+      connect: () => void;
+      disconnect: () => void;
+      start: () => void;
+      stop: () => void;
+      onended: (() => void) | null;
+    };
+    src.start = () => { startedCount++; };
+    src.stop = () => { stoppedCount++; };
+    return src;
+  };
+
+  sb.toggleSintoniaOficial();
+  await new Promise(r => setTimeout(r, 25));
+
+  assert.equal(startedCount, 1);
+  assert.equal(sb.isSintoniaPlaying(), true);
+  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Parar Sintonía de Inicio');
+  assert.equal(ctx.elements.get('dock-btn-sintonia')!.innerHTML.includes('Parar'), true);
+
+  sb.toggleSintoniaOficial();
+  assert.equal(stoppedCount, 1);
+  assert.equal(sb.isSintoniaPlaying(), false);
+  assert.equal(ctx.elements.get('sintonia-btn-label')!.textContent, 'Sintonía de Inicio');
+});
+
+test('Mobile and tablet Cabina tab switcher, studio accordion, and sticky dock buttons sync state cleanly', () => {
+  const ctx = loadIndexSandbox();
+  const s = ctx.sandbox as {
+    innerWidth?: number;
+    onload: () => void;
+    setMobileCabinaTab: (tab: string) => void;
+    toggleMobileStudioExtras: (force?: boolean) => void;
+    togglePrompterScroll: () => void;
+    stopPrompterScroll: () => void;
+    toggleManualDucking: () => void;
+  };
+
+  // Smartphone width defaults to teleprompter tab
+  s.innerWidth = 390;
+  s.onload();
+  assert.equal(ctx.elements.get('view-cabina')!.getAttribute('data-mobile-cabina-tab'), 'teleprompter');
+  assert.equal(ctx.elements.get('mobile-tab-teleprompter')!.getAttribute('aria-selected'), 'true');
+
+  // Switch to console and all tabs cleanly
+  s.setMobileCabinaTab('console');
+  assert.equal(ctx.elements.get('view-cabina')!.getAttribute('data-mobile-cabina-tab'), 'console');
+  assert.equal(ctx.elements.get('mobile-tab-console')!.getAttribute('aria-selected'), 'true');
+  assert.equal(ctx.elements.get('mobile-tab-teleprompter')!.getAttribute('aria-selected'), 'false');
+
+  s.setMobileCabinaTab('all');
+  assert.equal(ctx.elements.get('view-cabina')!.getAttribute('data-mobile-cabina-tab'), 'all');
+
+  // Toggle mobile studio extras accordion
+  assert.equal(ctx.elements.get('mobile-studio-extras')!.classList.contains('hidden'), true);
+  s.toggleMobileStudioExtras();
+  assert.equal(ctx.elements.get('mobile-studio-extras')!.classList.contains('hidden'), false);
+  assert.equal(ctx.elements.get('mobile-extras-label')!.textContent, 'Ocultar Ajustes');
+  s.toggleMobileStudioExtras();
+  assert.equal(ctx.elements.get('mobile-studio-extras')!.classList.contains('hidden'), true);
+
+  // Sync sticky mobile dock buttons with teleprompter scroll and ducking
+  s.togglePrompterScroll();
+  assert.equal(ctx.elements.get('dock-btn-play')!.innerHTML.includes('Pausar'), true);
+  s.stopPrompterScroll();
+  assert.equal(ctx.elements.get('dock-btn-play')!.innerHTML.includes('Leer'), true);
+
+  s.toggleManualDucking();
+  assert.equal(ctx.elements.get('dock-btn-duck')!.getAttribute('aria-pressed'), 'true');
+  s.toggleManualDucking();
+  assert.equal(ctx.elements.get('dock-btn-duck')!.getAttribute('aria-pressed'), 'false');
+});
+
+test('Sintonía de Cierre plays Lights_Down_on_the_Dial_8c00f301.mp3, alternates cleanly with Sintonía de Inicio, and responds to cue tags and Stop All', async () => {
+  const ctx = loadIndexSandbox();
+  let startedCount = 0;
+
+  const sb = ctx.sandbox as {
+    getAudioContext: () => {
+      state: string;
+      decodeAudioData?: (buf: ArrayBuffer) => Promise<{ duration: number; numberOfChannels: number }>;
+      createBufferSource: () => unknown;
+    };
+    fetch?: (url: string) => Promise<{ ok: boolean; arrayBuffer: () => Promise<ArrayBuffer> }>;
+    toggleSintoniaOficial: () => void;
+    toggleSintoniaCierre: () => void;
+    stopAllSounds: () => void;
+    isSintoniaPlaying: () => boolean;
+    isSintoniaCierrePlaying: () => boolean;
+    resolveScriptCueTag: (cueText: string) => boolean;
+  };
+
+  sb.fetch = async (url: string) => ({
+    ok: url === '/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3' ||
+        url === '/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3',
+    arrayBuffer: async () => new ArrayBuffer(4096)
+  });
+
+  const audioCtx = sb.getAudioContext();
+  audioCtx.decodeAudioData = async () => ({ duration: 150.0, numberOfChannels: 2 });
+  const origCreateBufferSource = audioCtx.createBufferSource.bind(audioCtx);
+  audioCtx.createBufferSource = () => {
+    const src = origCreateBufferSource() as {
+      buffer: unknown;
+      connect: () => void;
+      disconnect: () => void;
+      start: () => void;
+      stop: () => void;
+      onended: (() => void) | null;
+    };
+    src.start = () => { startedCount++; };
+    return src;
+  };
+
+  // Start Sintonía de Inicio first, then switch to Sintonía de Cierre
+  sb.toggleSintoniaOficial();
+  await new Promise(r => setTimeout(r, 25));
+  assert.equal(sb.isSintoniaPlaying(), true);
+
+  sb.toggleSintoniaCierre();
+  await new Promise(r => setTimeout(r, 25));
+  assert.equal(startedCount, 2);
+  assert.equal(sb.isSintoniaPlaying(), false);
+  assert.equal(sb.isSintoniaCierrePlaying(), true);
+  assert.equal(ctx.elements.get('sintonia-cierre-btn-label')!.textContent, 'Parar Sintonía de Cierre');
+  assert.equal(ctx.elements.get('dock-btn-sintonia-cierre')!.innerHTML.includes('Parar'), true);
+
+  // Stop all stops Cierre cleanly
+  sb.stopAllSounds();
+  assert.equal(sb.isSintoniaCierrePlaying(), false);
+  assert.equal(ctx.elements.get('sintonia-cierre-btn-label')!.textContent, 'Sintonía de Cierre');
+  assert.equal(ctx.elements.get('dock-btn-sintonia-cierre')!.innerHTML.includes('Cierre'), true);
+
+  // Script cue tag [SINTONÍA DE CIERRE] triggers Cierre
+  assert.equal(sb.resolveScriptCueTag('SINTONÍA DE CIERRE'), true);
+  await new Promise(r => setTimeout(r, 25));
+  assert.equal(sb.isSintoniaCierrePlaying(), true);
+
+  // Fallback audio element URL check
+  const fallbackCtx = loadIndexSandbox();
+  const fsb = fallbackCtx.sandbox as { toggleSintoniaCierre: () => void };
+  fsb.toggleSintoniaCierre();
+  const cierreAudio = fallbackCtx.getVmVar<{ src: string; paused: boolean }>('sintoniaCierreAudio');
+  assert.equal(cierreAudio.src, '/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3');
+  assert.equal(cierreAudio.paused, false);
+});
+
+
 
 
