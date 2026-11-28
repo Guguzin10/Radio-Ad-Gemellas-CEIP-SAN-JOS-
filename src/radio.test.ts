@@ -116,7 +116,10 @@ function createMockElement(id: string, tagName = 'DIV', type = ''): MockElement 
   return el;
 }
 
-function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
+function loadIndexSandbox(
+  initialStorage: Record<string, string> = {},
+  locationOverride: { protocol?: string; pathname?: string } = { protocol: 'https:', pathname: '/' }
+) {
   const html = fs.readFileSync(path.resolve(process.cwd(), 'index.html'), 'utf8');
   const scriptMatches = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
   const scriptCode = scriptMatches[scriptMatches.length - 1]?.[1] || '';
@@ -251,6 +254,7 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
     constructor(src: string) {
       this.src = src;
     }
+    load() {}
     play() {
       this.paused = false;
       this.onplay?.();
@@ -364,6 +368,10 @@ function loadIndexSandbox(initialStorage: Record<string, string> = {}) {
 
   const sandbox: Record<string, unknown> = {
     console,
+    location: {
+      protocol: locationOverride.protocol || 'https:',
+      pathname: locationOverride.pathname || '/'
+    },
     setTimeout,
     clearTimeout,
     setInterval,
@@ -1284,6 +1292,100 @@ test('Sintonía de Cierre plays Lights_Down_on_the_Dial_8c00f301.mp3, alternates
   assert.equal(cierreAudio.src, '/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3');
   assert.equal(cierreAudio.paused, false);
 });
+
+test('GitHub Pages subpath and raw public/assets repository serving resolve and auto-retry both Sintonía de Inicio and Sintonía de Cierre', async () => {
+  // 1. GitHub Pages subpath (/radio-ad-gemellas/): prioritizes ./assets/... then ./public/assets/... ahead of root /assets/...
+  const ghCtx = loadIndexSandbox({}, { protocol: 'https:', pathname: '/radio-ad-gemellas/' });
+  let startedCount = 0;
+  const fetchedUrls: string[] = [];
+
+  const sb = ghCtx.sandbox as {
+    buildAssetCandidateUrls: (rel: string) => string[];
+    getAudioContext: () => {
+      state: string;
+      decodeAudioData?: (buf: ArrayBuffer) => Promise<{ duration: number; numberOfChannels: number }>;
+      createBufferSource: () => unknown;
+    };
+    fetch?: (url: string) => Promise<{
+      ok: boolean;
+      headers?: { get: (name: string) => string | null };
+      arrayBuffer: () => Promise<ArrayBuffer>;
+    }>;
+    toggleSintoniaOficial: () => void;
+    toggleSintoniaCierre: () => void;
+    isSintoniaPlaying: () => boolean;
+    isSintoniaCierrePlaying: () => boolean;
+  };
+
+  const candidates = sb.buildAssetCandidateUrls('assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
+  assert.equal(candidates[0], './assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
+  assert.equal(candidates[1], './public/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
+  assert.ok(candidates.indexOf('./public/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3') < candidates.indexOf('/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3'));
+
+  // Simulate GitHub raw repo Pages where ./assets/* returns HTML 404 page (200 text/html) and ./public/assets/* serves MP3 bytes
+  const htmlBytes = Buffer.from('<!DOCTYPE html><html><body>404</body></html>'.repeat(40));
+  const fakeMp3Bytes = Buffer.alloc(4096, 0xff);
+  sb.fetch = async (url: string) => {
+    fetchedUrls.push(url);
+    if (url.startsWith('./public/assets/aistudio/')) {
+      return {
+        ok: true,
+        headers: { get: () => 'audio/mpeg' },
+        arrayBuffer: async () => fakeMp3Bytes.buffer.slice(fakeMp3Bytes.byteOffset, fakeMp3Bytes.byteOffset + fakeMp3Bytes.byteLength)
+      };
+    }
+    return {
+      ok: true,
+      headers: { get: () => 'text/html; charset=utf-8' },
+      arrayBuffer: async () => htmlBytes.buffer.slice(htmlBytes.byteOffset, htmlBytes.byteOffset + htmlBytes.byteLength)
+    };
+  };
+
+  const audioCtx = sb.getAudioContext();
+  audioCtx.decodeAudioData = async () => ({ duration: 160, numberOfChannels: 2 });
+  const origCreateBufferSource = audioCtx.createBufferSource.bind(audioCtx);
+  audioCtx.createBufferSource = () => {
+    const src = origCreateBufferSource() as { start: () => void };
+    src.start = () => { startedCount++; };
+    return src;
+  };
+
+  sb.toggleSintoniaOficial();
+  await new Promise(r => setTimeout(r, 25));
+  assert.equal(startedCount, 1);
+  assert.equal(sb.isSintoniaPlaying(), true);
+  assert.ok(fetchedUrls.includes('./public/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3'));
+
+  sb.toggleSintoniaCierre();
+  await new Promise(r => setTimeout(r, 25));
+  assert.equal(startedCount, 2);
+  assert.equal(sb.isSintoniaCierrePlaying(), true);
+  assert.ok(fetchedUrls.includes('./public/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3'));
+
+  // 2. HTMLAudioElement fallback path: if candidate 0 triggers onerror, it switches to ./public/assets/... and automatically calls play()
+  const fbCtx = loadIndexSandbox({}, { protocol: 'https:', pathname: '/radio-ad-gemellas/' });
+  const fsb = fbCtx.sandbox as {
+    toggleSintoniaOficial: () => void;
+    toggleSintoniaCierre: () => void;
+  };
+
+  fsb.toggleSintoniaOficial();
+  const sAudio = fbCtx.getVmVar<{ src: string; paused: boolean; onerror: () => void }>('sintoniaAudio');
+  assert.equal(sAudio.src, './assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
+  sAudio.paused = true;
+  sAudio.onerror();
+  assert.equal(sAudio.src, './public/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3');
+  assert.equal(sAudio.paused, false);
+
+  fsb.toggleSintoniaCierre();
+  const cAudio = fbCtx.getVmVar<{ src: string; paused: boolean; onerror: () => void }>('sintoniaCierreAudio');
+  assert.equal(cAudio.src, './assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3');
+  cAudio.paused = true;
+  cAudio.onerror();
+  assert.equal(cAudio.src, './public/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3');
+  assert.equal(cAudio.paused, false);
+});
+
 
 
 

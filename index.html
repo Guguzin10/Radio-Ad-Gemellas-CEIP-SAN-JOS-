@@ -1020,18 +1020,61 @@
     /* ==========================================================================
        2. MOTOR DE AUDIO ESTUDIO, SINTONÍA OFICIAL MP3, 24 EFECTOS REALISTAS Y GRABADORA
        ========================================================================== */
-    const SINTONIA_OFICIAL_SRC = '/assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3';
-    const SINTONIA_FALLBACK_URLS = [
-      SINTONIA_OFICIAL_SRC,
-      './assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3',
-      'assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3'
-    ];
-    const SINTONIA_CIERRE_SRC = '/assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3';
-    const SINTONIA_CIERRE_FALLBACK_URLS = [
-      SINTONIA_CIERRE_SRC,
-      './assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3',
-      'assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3'
-    ];
+    const SINTONIA_OFICIAL_REL_PATH = 'assets/aistudio/Palenciana_en_el_aire_7eae12fb.mp3';
+    const SINTONIA_CIERRE_REL_PATH = 'assets/aistudio/Lights_Down_on_the_Dial_8c00f301.mp3';
+
+    function buildAssetCandidateUrls(relativeAssetPath) {
+      const clean = String(relativeAssetPath || '').replace(/^\.?\//, '');
+      const loc = (typeof window !== 'undefined' && window.location) ? window.location : null;
+      const proto = loc && loc.protocol ? loc.protocol : '';
+      const pathname = loc && loc.pathname ? loc.pathname : '/';
+      const segs = pathname.split('/').filter(Boolean);
+      const isSubpath = segs.length > 1 || (segs.length === 1 && segs[0] !== 'index.html');
+
+      const ordered = proto === 'file:'
+        ? ['./public/' + clean, './' + clean, 'public/' + clean, clean, '../public/' + clean]
+        : isSubpath
+          ? ['./' + clean, './public/' + clean, clean, 'public/' + clean, '../public/' + clean, '/' + clean, '/public/' + clean]
+          : ['/' + clean, './' + clean, './public/' + clean, clean, 'public/' + clean, '/public/' + clean, '../public/' + clean];
+
+      return Array.from(new Set(ordered));
+    }
+
+    function getSintoniaFallbackUrls() {
+      return buildAssetCandidateUrls(SINTONIA_OFICIAL_REL_PATH);
+    }
+
+    function getSintoniaCierreFallbackUrls() {
+      return buildAssetCandidateUrls(SINTONIA_CIERRE_REL_PATH);
+    }
+
+    const SINTONIA_OFICIAL_SRC = '/' + SINTONIA_OFICIAL_REL_PATH;
+    const SINTONIA_FALLBACK_URLS = getSintoniaFallbackUrls();
+    const SINTONIA_CIERRE_SRC = '/' + SINTONIA_CIERRE_REL_PATH;
+    const SINTONIA_CIERRE_FALLBACK_URLS = getSintoniaCierreFallbackUrls();
+
+    function isLikelyHtmlOrTextBuffer(buf) {
+      if (!buf || buf.byteLength <= 1024) return true;
+      try {
+        const bytes = new Uint8Array(buf, 0, Math.min(32, buf.byteLength));
+        let head = '';
+        for (let i = 0; i < bytes.length; i++) {
+          head += String.fromCharCode(bytes[i]);
+        }
+        const trimmed = head.trimStart().toLowerCase();
+        if (
+          trimmed.startsWith('<!doc') ||
+          trimmed.startsWith('<html') ||
+          trimmed.startsWith('<head') ||
+          trimmed.startsWith('<body') ||
+          trimmed.startsWith('<script')
+        ) {
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
     let audioCtx = null;
     let studioMasterBus = null;
     let studioRecordMixBus = null;
@@ -1055,6 +1098,7 @@
     let sintoniaBufferSource = null;
     let isSintoniaBufferPlaying = false;
     let sintoniaPlayToken = 0;
+    let sintoniaAudioWantsPlay = false;
 
     let sintoniaCierreAudio = null;
     let sintoniaCierreSource = null;
@@ -1065,6 +1109,7 @@
     let sintoniaCierreBufferSource = null;
     let isSintoniaCierreBufferPlaying = false;
     let sintoniaCierrePlayToken = 0;
+    let sintoniaCierreAudioWantsPlay = false;
 
     const activeLoops = {};
     const activeOneShots = {};
@@ -1362,19 +1407,25 @@
       if (sintoniaRawPromise) return sintoniaRawPromise;
       if (typeof fetch !== 'function') return Promise.resolve(null);
 
+      const candidates = getSintoniaFallbackUrls();
       sintoniaRawPromise = (async () => {
-        for (const candidateUrl of SINTONIA_FALLBACK_URLS) {
+        for (const candidateUrl of candidates) {
           try {
             const resp = await fetch(candidateUrl);
             if (resp && resp.ok) {
+              const ct = (resp.headers && typeof resp.headers.get === 'function')
+                ? String(resp.headers.get('content-type') || '').toLowerCase()
+                : '';
+              if (ct.includes('text/html') || ct.includes('application/xhtml')) continue;
               const buf = await resp.arrayBuffer();
-              if (buf && buf.byteLength > 1024) {
+              if (!isLikelyHtmlOrTextBuffer(buf)) {
                 sintoniaRawArrayBuffer = buf;
                 return buf;
               }
             }
           } catch (e) {}
         }
+        sintoniaRawPromise = null;
         return null;
       })();
       return sintoniaRawPromise;
@@ -1395,31 +1446,52 @@
 
     function ensureSintoniaAudio() {
       if (!sintoniaAudio) {
-        sintoniaAudio = new Audio(SINTONIA_OFICIAL_SRC);
+        const candidates = getSintoniaFallbackUrls();
+        sintoniaAudio = new Audio(candidates[0] || SINTONIA_OFICIAL_SRC);
         sintoniaAudio.preload = 'auto';
+        sintoniaAudio._candidates = candidates;
         sintoniaAudio._fallbackIdx = 0;
+        sintoniaAudio._advancingFallback = false;
         sintoniaAudio.onplay = () => {
           updateSintoniaButtonUI(true);
           setMixerVisualStatus('Sintonía de Inicio: Palenciana en el aire', 0);
         };
         sintoniaAudio.onpause = () => {
+          if (sintoniaAudio._advancingFallback) return;
+          sintoniaAudioWantsPlay = false;
           if (!isSintoniaBufferPlaying) {
             updateSintoniaButtonUI(false);
             refreshMixerIdleStatus();
           }
         };
         sintoniaAudio.onended = () => {
+          sintoniaAudioWantsPlay = false;
           updateSintoniaButtonUI(false);
           refreshMixerIdleStatus();
         };
         sintoniaAudio.onerror = () => {
+          const list = sintoniaAudio._candidates || getSintoniaFallbackUrls();
           const nextIdx = (sintoniaAudio._fallbackIdx || 0) + 1;
-          if (nextIdx < SINTONIA_FALLBACK_URLS.length) {
+          if (nextIdx < list.length) {
+            sintoniaAudio._advancingFallback = true;
             sintoniaAudio._fallbackIdx = nextIdx;
-            sintoniaAudio.src = SINTONIA_FALLBACK_URLS[nextIdx];
+            sintoniaAudio.src = list[nextIdx];
             if (typeof sintoniaAudio.load === 'function') sintoniaAudio.load();
+            sintoniaAudio._advancingFallback = false;
+            if (sintoniaAudioWantsPlay) {
+              sintoniaAudio._playAttemptId = (sintoniaAudio._playAttemptId || 0) + 1;
+              const retryPlay = sintoniaAudio.play();
+              if (retryPlay && typeof retryPlay.catch === 'function') {
+                retryPlay.catch(() => {});
+              }
+            }
             return;
           }
+          sintoniaAudioWantsPlay = false;
+          const freshList = getSintoniaFallbackUrls();
+          sintoniaAudio._candidates = freshList;
+          sintoniaAudio._fallbackIdx = 0;
+          sintoniaAudio.src = freshList[0] || SINTONIA_OFICIAL_SRC;
           updateSintoniaButtonUI(false);
           showToast('No se pudo cargar el audio de Sintonía de Inicio');
         };
@@ -1431,6 +1503,8 @@
 
     function playSintoniaViaAudioElement() {
       const audio = ensureSintoniaAudio();
+      sintoniaAudioWantsPlay = true;
+      const attemptId = (audio._playAttemptId = (audio._playAttemptId || 0) + 1);
       if (audio.readyState >= 1) {
         try { audio.currentTime = 0; } catch (e) {}
       }
@@ -1438,8 +1512,17 @@
       audio.volume = getMasterGain() * factor;
       const p = audio.play();
       if (p && typeof p.catch === 'function') {
-        p.catch(() => {
-          showToast('Pulsa de nuevo para iniciar la Sintonía de Inicio');
+        p.catch((err) => {
+          if (attemptId !== audio._playAttemptId) return;
+          const list = audio._candidates || getSintoniaFallbackUrls();
+          const hasMoreFallbacks = ((audio._fallbackIdx || 0) + 1) < list.length;
+          if (err && err.name === 'NotAllowedError') {
+            sintoniaAudioWantsPlay = false;
+            showToast('Pulsa de nuevo para iniciar la Sintonía de Inicio');
+          } else if (!hasMoreFallbacks && (!err || err.name !== 'AbortError')) {
+            sintoniaAudioWantsPlay = false;
+            showToast('Pulsa de nuevo para iniciar la Sintonía de Inicio');
+          }
         });
       }
     }
@@ -1536,6 +1619,7 @@
 
     function stopSintoniaOficial() {
       sintoniaPlayToken++;
+      sintoniaAudioWantsPlay = false;
       stopSintoniaBufferOnly();
       if (sintoniaAudio) {
         sintoniaAudio.pause();
@@ -1576,19 +1660,25 @@
       if (sintoniaCierreRawPromise) return sintoniaCierreRawPromise;
       if (typeof fetch !== 'function') return Promise.resolve(null);
 
+      const candidates = getSintoniaCierreFallbackUrls();
       sintoniaCierreRawPromise = (async () => {
-        for (const candidateUrl of SINTONIA_CIERRE_FALLBACK_URLS) {
+        for (const candidateUrl of candidates) {
           try {
             const resp = await fetch(candidateUrl);
             if (resp && resp.ok) {
+              const ct = (resp.headers && typeof resp.headers.get === 'function')
+                ? String(resp.headers.get('content-type') || '').toLowerCase()
+                : '';
+              if (ct.includes('text/html') || ct.includes('application/xhtml')) continue;
               const buf = await resp.arrayBuffer();
-              if (buf && buf.byteLength > 1024) {
+              if (!isLikelyHtmlOrTextBuffer(buf)) {
                 sintoniaCierreRawArrayBuffer = buf;
                 return buf;
               }
             }
           } catch (e) {}
         }
+        sintoniaCierreRawPromise = null;
         return null;
       })();
       return sintoniaCierreRawPromise;
@@ -1609,31 +1699,52 @@
 
     function ensureSintoniaCierreAudio() {
       if (!sintoniaCierreAudio) {
-        sintoniaCierreAudio = new Audio(SINTONIA_CIERRE_SRC);
+        const candidates = getSintoniaCierreFallbackUrls();
+        sintoniaCierreAudio = new Audio(candidates[0] || SINTONIA_CIERRE_SRC);
         sintoniaCierreAudio.preload = 'auto';
+        sintoniaCierreAudio._candidates = candidates;
         sintoniaCierreAudio._fallbackIdx = 0;
+        sintoniaCierreAudio._advancingFallback = false;
         sintoniaCierreAudio.onplay = () => {
           updateSintoniaCierreButtonUI(true);
           setMixerVisualStatus('Sintonía de Cierre: Lights Down on the Dial', 0);
         };
         sintoniaCierreAudio.onpause = () => {
+          if (sintoniaCierreAudio._advancingFallback) return;
+          sintoniaCierreAudioWantsPlay = false;
           if (!isSintoniaCierreBufferPlaying) {
             updateSintoniaCierreButtonUI(false);
             refreshMixerIdleStatus();
           }
         };
         sintoniaCierreAudio.onended = () => {
+          sintoniaCierreAudioWantsPlay = false;
           updateSintoniaCierreButtonUI(false);
           refreshMixerIdleStatus();
         };
         sintoniaCierreAudio.onerror = () => {
+          const list = sintoniaCierreAudio._candidates || getSintoniaCierreFallbackUrls();
           const nextIdx = (sintoniaCierreAudio._fallbackIdx || 0) + 1;
-          if (nextIdx < SINTONIA_CIERRE_FALLBACK_URLS.length) {
+          if (nextIdx < list.length) {
+            sintoniaCierreAudio._advancingFallback = true;
             sintoniaCierreAudio._fallbackIdx = nextIdx;
-            sintoniaCierreAudio.src = SINTONIA_CIERRE_FALLBACK_URLS[nextIdx];
+            sintoniaCierreAudio.src = list[nextIdx];
             if (typeof sintoniaCierreAudio.load === 'function') sintoniaCierreAudio.load();
+            sintoniaCierreAudio._advancingFallback = false;
+            if (sintoniaCierreAudioWantsPlay) {
+              sintoniaCierreAudio._playAttemptId = (sintoniaCierreAudio._playAttemptId || 0) + 1;
+              const retryPlay = sintoniaCierreAudio.play();
+              if (retryPlay && typeof retryPlay.catch === 'function') {
+                retryPlay.catch(() => {});
+              }
+            }
             return;
           }
+          sintoniaCierreAudioWantsPlay = false;
+          const freshList = getSintoniaCierreFallbackUrls();
+          sintoniaCierreAudio._candidates = freshList;
+          sintoniaCierreAudio._fallbackIdx = 0;
+          sintoniaCierreAudio.src = freshList[0] || SINTONIA_CIERRE_SRC;
           updateSintoniaCierreButtonUI(false);
           showToast('No se pudo cargar el audio de Sintonía de Cierre');
         };
@@ -1645,6 +1756,8 @@
 
     function playSintoniaCierreViaAudioElement() {
       const audio = ensureSintoniaCierreAudio();
+      sintoniaCierreAudioWantsPlay = true;
+      const attemptId = (audio._playAttemptId = (audio._playAttemptId || 0) + 1);
       if (audio.readyState >= 1) {
         try { audio.currentTime = 0; } catch (e) {}
       }
@@ -1652,8 +1765,17 @@
       audio.volume = getMasterGain() * factor;
       const p = audio.play();
       if (p && typeof p.catch === 'function') {
-        p.catch(() => {
-          showToast('Pulsa de nuevo para iniciar la Sintonía de Cierre');
+        p.catch((err) => {
+          if (attemptId !== audio._playAttemptId) return;
+          const list = audio._candidates || getSintoniaCierreFallbackUrls();
+          const hasMoreFallbacks = ((audio._fallbackIdx || 0) + 1) < list.length;
+          if (err && err.name === 'NotAllowedError') {
+            sintoniaCierreAudioWantsPlay = false;
+            showToast('Pulsa de nuevo para iniciar la Sintonía de Cierre');
+          } else if (!hasMoreFallbacks && (!err || err.name !== 'AbortError')) {
+            sintoniaCierreAudioWantsPlay = false;
+            showToast('Pulsa de nuevo para iniciar la Sintonía de Cierre');
+          }
         });
       }
     }
@@ -1747,6 +1869,7 @@
 
     function stopSintoniaCierre() {
       sintoniaCierrePlayToken++;
+      sintoniaCierreAudioWantsPlay = false;
       stopSintoniaCierreBufferOnly();
       if (sintoniaCierreAudio) {
         sintoniaCierreAudio.pause();
