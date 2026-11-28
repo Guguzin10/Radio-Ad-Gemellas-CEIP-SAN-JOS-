@@ -519,7 +519,7 @@
               <button onclick="insertScriptTag('[EFECTO: APLAUSOS]')" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold cursor-pointer">+ Aplausos</button>
             </div>
           </div>
-          <textarea id="script-editor" rows="5" oninput="onScriptInput()" aria-label="Editor del guion de radio" class="w-full theme-panel border rounded-xl p-2.5 text-xs sm:text-sm leading-relaxed focus:outline-none" placeholder="Escribe o edita el guion aquí..."></textarea>
+          <textarea id="script-editor" rows="5" oninput="onScriptInput()" onchange="onScriptInput()" aria-label="Editor del guion de radio" class="w-full theme-panel border rounded-xl p-2.5 text-xs sm:text-sm leading-relaxed focus:outline-none" placeholder="Escribe o edita el guion aquí..."></textarea>
           <div class="flex justify-between items-center text-[11px] theme-muted">
             <span>Usa <strong>LOCUTOR 1:</strong> para colorear voces y <strong>[EFECTO: ...]</strong> o <strong>[CAJÓN 1]</strong> para disparar sonidos desde el guion.</span>
             <button onclick="toggleQuickEditor()" class="px-3 py-1 rounded-lg theme-accent-bg font-extrabold cursor-pointer">
@@ -5547,20 +5547,13 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       }, 2800);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const box = document.getElementById('teleprompter-box');
-      if (box) {
-        box.addEventListener('scroll', () => {
-          if (!isPrompterScrolling) {
-            exactScrollPos = box.scrollTop;
-          }
-        }, { passive: true });
-      }
-    });
+    let hasInitializedStudioApp = false;
+    let lastInitializedWidth = null;
 
-    document.addEventListener('keydown', handleGlobalKeydown);
+    function initializeStudioApp() {
+      if (hasInitializedStudioApp) return;
+      hasInitializedStudioApp = true;
 
-    window.onload = function() {
       renderSixSlots();
       renderCabinaSfxGrid('all');
       renderChecklist();
@@ -5585,6 +5578,7 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
 
       // En pantallas de smartphone (< 768px), abrir por defecto en la pestaña Guion para lectura cómoda
       const initialWidth = typeof window !== 'undefined' && typeof window.innerWidth === 'number' ? window.innerWidth : 1280;
+      lastInitializedWidth = initialWidth;
       setMobileCabinaTab(initialWidth < 768 ? 'teleprompter' : 'all');
 
       if (typeof navigator !== 'undefined' && navigator.mediaDevices && typeof navigator.mediaDevices.addEventListener === 'function') {
@@ -5596,9 +5590,37 @@ LOCUTOR 2: Y hoy nosotros seguimos tendiendo puentes con nuestra voz. ¡Hasta la
       prefetchSintoniaBytes();
       prefetchSintoniaCierreBytes();
       restoreLocalSlotsFromIndexedDB();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const box = document.getElementById('teleprompter-box');
+      if (box) {
+        box.addEventListener('scroll', () => {
+          if (!isPrompterScrolling) {
+            exactScrollPos = box.scrollTop;
+          }
+        }, { passive: true });
+      }
+      initializeStudioApp();
+    });
+
+    document.addEventListener('keydown', handleGlobalKeydown);
+
+    window.onload = function() {
+      if (!hasInitializedStudioApp) {
+        initializeStudioApp();
+      } else if (typeof window !== 'undefined' && typeof window.innerWidth === 'number' && window.innerWidth !== lastInitializedWidth) {
+        lastInitializedWidth = window.innerWidth;
+        setMobileCabinaTab(window.innerWidth < 768 ? 'teleprompter' : 'all');
+      }
     };
 
+    window.addEventListener('pagehide', () => {
+      saveAppState();
+    });
+
     window.addEventListener('beforeunload', () => {
+      saveAppState();
       cleanupMicCapture();
     });
   </script>
